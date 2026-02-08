@@ -1,0 +1,392 @@
+\documentclass[11pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, graphicx, float, subfigure, geometry, setspace, xfrac, unicode-math, tikz-cd, enumerate}
+\usepackage[bookmarks=true, colorlinks, citecolor=blue, linkcolor=black]{hyperref}
+\ctexset{
+    section = {
+        format = {\Large\bfseries},
+    }
+}
+\setmathfont{LatinModernMath-Regular}
+\setmathfont[range=\mathbb]{TeXGyrePagellaMath-Regular}
+
+% 导言区
+
+\title{单复变动力系统笔记 11. Cremer 点和 Siegel 圆盘}
+\author{zero-point\_}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{conjecture}[theorem]{猜想}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{note}[theorem]{自注}
+\newtheorem{property}[theorem]{性质}
+\newtheorem{remark}[theorem]{注}
+\setlength{\parindent}{10ex}
+\pagestyle{plain}
+\geometry{left=2.54cm, right=2.54cm, top=3.18cm, bottom=3.18cm}
+\setstretch{1.5}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+
+\begin{document}
+	\maketitle
+
+    我们继续讨论中性不动点，本章研究的是非抛物的中性不动点的局部性质，我们重点关注其是否可以局部线性化. 这一问题至今没有被彻底解决.
+
+    这一章作者的组织稍微有些混乱，我调整了一下顺序，并且与教材~\cite{katok} 相结合.
+
+    \setcounter{section}{-1}
+    \section{预备知识}
+    \begin{itemize}
+        \item Baire 纲定理
+        \item Lebesgue 测度
+        \item 辐角原理/Rouché 定理
+        \item 重数与乘子的关系（引理 3.10.2.3/教材引理~10.4）
+        \item Möbius 变换
+        \item 双曲面上的正规族推论（教材推论~3.3）
+        \item Weierstrass 定理
+        \item Kœnigs 线性化的推广推论（教材注~8.3）
+        \item 找临界点引理（教材引理~8.5）
+        \item Kœnigs 线性化定理证明（教材定理~8.2）
+        \item Cauchy 积分定理
+        \item 双曲面无 Julia 集引理（教材引理~5.1）
+        \item 双曲距离与 Pick 定理（教材定理~2.11）
+        \item Siegel 圆盘引理（教材引理~5.3）
+        \item Julia 集不变性原理（教材引理~4.3）
+    \end{itemize}
+
+    \section{研究对象}
+    \begin{definition}[无理中性不动点、旋转数]
+        设局部 Taylor 展开 $f(z)=\lambda z+a_2 z^2+\cdots$，$|\lambda|=1$，设 $\lambda=e^{2\pi i\xi},\xi\in \R/\Z\wedge \xi\notin \Q$，则称 $z=0$ 是无理中性不动点，$\xi$ 是其切空间的旋转数.
+    \end{definition}
+
+    \begin{lemma}[局部线性化等价性 (11.1)]\label{引理11.1}
+        设 $f$ 是 $\hat{\C}$ 上的有理函数，$\deg(f)\geq 2$，且 $z_0$ 是中性不动点，则以下等价：
+        \begin{enumerate}[(1)]
+            \item $f$ 在 $z_0$ 处可以局部线性化（字面意思，局部通过全纯共轭变换 $h$ 映为 $z\mapsto \lambda z$，且 $h(z_0)=0$）；
+            \item $z_0\in\hat{\C}\setminus J(f)$；
+            \item 设 $U$ 是包含 $z_0$ 的 Fatou 集的连通分支，则 $U\mathop{\simeq}\limits_{\varphi}\D$，且 $\varphi\circ f|_U\circ\varphi^{-1}=(z\mapsto\lambda z)$.
+        \end{enumerate}
+    \end{lemma}
+    \begin{proof}
+        (3) 比 (1) 强， (2) $\Rightarrow$ (3) 由 Siegel 圆盘定理（推论 5.3）即证，于是只需 (1) $\Rightarrow$ (2)：全纯共轭保正规性，而 $\Lambda:\;z\mapsto \lambda z$ 显然有 $\{\Lambda^{\circ n}\}$ 在 $0$ 处正规，得证.
+    \end{proof}
+
+    \begin{definition}[Siegel 点、Cremer 点和 Siegel 圆盘]
+        若 $f$ 在无理中性不动点 $z_0$ 处可以局部线性化，则称 $z_0$ 为 Siegel 点，否则称其为 Cremer 点；$z_0$ 若为 Siegel 点，则其所在的 Fatou 集连通分支称为 Siegel 圆盘，$z_0$ 被称为该圆盘的中心.
+    \end{definition}
+
+    \begin{definition}[小周期性质]
+        若不动点 $\hat{z}$ 的任何足够小的邻域都包含了无穷多个周期轨道，则称之含有小周期性质.
+    \end{definition}
+    \begin{property}
+        有小周期性质的不动点，若乘子模长为 $1$，则为 Cremer 点.
+    \end{property}
+
+    \begin{definition}[通用性质]
+        设 $P$ 是拓扑空间 $X$ 中元素的性质，若 $\{x\in X\mid P(x)\text{ 为真}\}$ 包含了 $X$ 中可数个稠密开集的交集，则称 $P$ 在 $X$ 中\underline{通用}为真.
+    \end{definition}
+
+    \begin{remark}[Baire 纲定理]
+        $\R\setminus\Z$ 显然是 Baire 空间，于是其上可数稠密开集的交仍然是稠密的，而且元素个数不可数.
+    \end{remark}
+
+    \begin{lemma}[通用角引理 (Problem 11-b)]
+        任意给定一个趋于 $0$ 的正实数列 $\varepsilon_1,\varepsilon_2,\ldots$，任意给定 $q_0\in\N$，设 $S(q_0)$ 是满足以下条件的所有实数组成的集合：$\exists\; q>q_0\wedge p\in\Z,\;\abs{\xi-\frac{p}{q}}<\varepsilon_q$. 则 $S(q_0)$ 是开稠集.
+    \end{lemma}
+    \begin{proof}
+        稠密集 $\{\frac{p}{q}\mid q>q_0,\; p\in\Z\}\subset S(q_0)$，而集合显然开.
+    \end{proof}
+    \begin{example}\label{例1.9}
+        设 $\varepsilon_q=2^{-q!}$，则 $S=\bigcap\limits_{q_0\in\N}S(q_0)\subset\{\xi\in\R\mid \varliminf\limits_{q\to \infty}\sqrt[d^q]{\abs{e^{i 2\pi \xi q}-1}}=0,\;\forall\; d\geq 2\}$.
+    \end{example}
+    \begin{proof}
+        $\forall\; \xi\in S$，可以找到数列 $1\leq q_1<q_2<\cdots$ 以及对应的 $p_1,p_2,\ldots$，使得 $\abs{\xi-\frac{p_i}{q_i}}<\varepsilon_{q_i}$，于是设 $\delta_i$ 是 $q_i \xi$ 到距它最近的整数的距离，则 $\delta_i<q_i\varepsilon_{q_i}=q_i 2^{-q_i!}$，于是易证 $\lim\limits_{i\to\infty}\sqrt[d^{q_i}]{2\sin(\pi\delta_i)}=0$.
+    \end{proof}
+
+    \begin{lemma}[重根分裂]\label{重根分裂}
+        设 $f(z)=z^{m+1}+O(z^{m+2})$ 在 $0$ 的小邻域全纯，从而在 $0$ 处有 $m+1$ 重根，则 $\exists\; \varepsilon_0>0,\;\forall\; \varepsilon\in\D(0,\varepsilon_0)\setminus\{0\},\; g_{\varepsilon}(z)=f(z)+\varepsilon z$ 有 $m+1$ 个单根.
+    \end{lemma}
+    \begin{proof}
+        设 $\delta>0$ 使得 $\varepsilon_0:=\min\limits_{\abs{z}=\delta}\abs{f(z)}>0$（紧集上的连续函数有最大最小值，而可以取足够小的邻域以及 $\delta$，使得 $\{\abs{z}\leq \delta\}$ 被邻域包含，且邻域内 $f$ 没有根），于是在 $\{\abs{z}=\delta\}$ 上 $\abs{g_{\varepsilon}-f}\leq \abs{\varepsilon}<\varepsilon_0\leq \abs{f}$（取邻域足够小以至于在 $\D$ 内），于是由 Rouché 定理，$g_{\varepsilon}$ 在 $\{\abs{z}<\delta\}$ 上与 $f$ 零点个数相同（记重），都有 $m+1$ 个.
+
+        要证明是单根，需要分析导数. 首先设 $f(z)=z^{m+1}+h(z)$，则当 $z\neq 0$ 为根时，$\varepsilon=-z^m-\frac{h}{z}$，这时 $g_{\varepsilon}'(z)=\varepsilon+(m+1)z^m+h'=mz^m+h'-\frac{h}{z}$，由于 $h=O(z^{m+2})$，于是 $\exists\; C>0,\;\abs{h'-\frac{h}{z}}\leq C\abs{z^{m+1}}$，从而 $\abs{g_{\varepsilon}'(z)}\geq m\abs{z^m}-C\abs{z^{m+1}}=(m-C\abs{z})\abs{z^m}$，邻域足够小则 $\abs{g_{\varepsilon}'(z)}>0$，从而 $z$ 是单根. 显然 $z=0$ 也是单根.
+    \end{proof}
+
+    \section{数论基础}
+    \begin{definition}[Diophantine 数]
+        给定数 $c>0,\;d\geq 1$，对于 $\alpha\in \R$，若 $\forall\; p,q\in\Z,\; |q\alpha-p|>cq^{-d}$，则 $\alpha$ 称为 $(c,d)$-型 Diophantine 数；所有 $(c,d)$-型 Diophantine 数合称 Diophantine 数；$\cD(\kappa)$ 是所有满足 $d\leq \kappa-1$ 的 $(c,d)$-型 Diophantine 数. 特别的，$\kappa=2$ 时称为有界型 Diophantine 数. 另记 $\cD(\alpha+)=\bigcap\limits_{\kappa>\alpha}\cD(\kappa)$.
+    \end{definition}
+
+    \begin{theorem}[Liouville 定理 (11.6)]
+        设 $\xi$ 是 $d$ 次整系数方程的无理根，则 $\xi\in \cD(d)$.
+    \end{theorem}
+    \begin{proof}
+        取逼近 $\frac{p_n}{q_n}$，由于根的孤立性，不妨设 $f(\frac{p_n}{q_n})\neq 0$，则分母最大是 $q^d$；$f\in C^{\infty}(\C)$ 则显然 $|f(\frac{p}{q})|\leq M|\xi-\frac{p}{q}|$，$M$ 与 $p,q$ 无关.
+    \end{proof}
+    \begin{corollary}[代数数是 Diophantine 数]
+        所有代数数是 Diophantine 数.
+    \end{corollary}
+    \begin{definition}[Liouville 数]
+        非 Diophantine 的无理数称为 Liouville 数.
+    \end{definition}
+    \begin{remark}[Liouville 数的维数]
+        Liouville 数的 Hausdorff 维数为 $0$. 证明见教材附录 C.
+    \end{remark}
+    \begin{remark}[Roth 定理]
+        代数数集含于 $\cD(2+)$.
+
+        这一定理帮助 Roth 获得了 Fields 奖，具体证明过程见~\cite{roth}. 证明所使用的技巧和复动力系统关系不大，不赘述.
+    \end{remark}
+
+    \begin{lemma}[$\cD(2+)$ 的测度 (11.7)]\label{引理11.7}
+        $\R/\Z$ 在 Lebesgue 测度 $m$ 下，$m(\cD(2+))=1$.
+    \end{lemma}
+    \begin{proof}
+        设 $U(\kappa,\varepsilon)=\{\xi\in [0,1]\mid \exists\; p,q\in\Z,\; |\xi-\frac{p}{q}|<\frac{\varepsilon}{q^k}\}$，于是 $m(U(\kappa,\varepsilon))\leq \sum\limits_{q=1}^{\infty}q\cdot\frac{2\varepsilon}{q^{\kappa}}$（$p$ 可取 $0,\ldots,q-1$ 共 $q$ 个选择，而每个 $(p,q)$ 对应的区间长度就是 $\frac{2\varepsilon}{q^{\kappa}}$）. 只要 $\kappa>2$ 级数就收敛，于是 $\varepsilon\to 0$ 时趋于 $0$，于是 $\cD(\kappa)=(\R/\Z)\setminus(\bigcap\limits_{\varepsilon>0}U(\kappa,\varepsilon))$ 全测度. 由于零测集的并零测，于是全测集的交全测，得证.
+    \end{proof}
+    \begin{remark}[$\cD(2)$ 的测度]
+        $m(\cD(2))=0$.
+    \end{remark}
+
+    \begin{definition}[连分数展开]
+        根据带余除法，显然任意数 $\xi\in (0,1)$ 都可以展开为 $\xi=\frac{1}{k_1+\frac{1}{k_2+\frac{1}{k_3+\cdots}}}$ 连分数形式，记 $\xi=[k_1,k_2,k_3,\ldots]$ 为其连分数展开，$\frac{p_n}{q_n}=[k_1,\ldots,k_{n-1}]$ 是 $\xi$ 的第 $n$ 个渐进分数（$p_n,q_n$ 互素）.
+    \end{definition}
+    \begin{remark}
+        关于连分数的诸多初等性质，这里并不赘述，可以参考教材~\cite{zorich}.
+    \end{remark}
+
+    \begin{theorem}[渐进分数的最佳逼近 1 (11.8)]\label{定理11.8.1}
+        设 $\xi\in (0,1)$ 的第 $k$ 个渐进分数是 $\frac{p_k}{q_k}$，则 $\forall q<q_n+q_{n-1},\forall p\in\N,\abs{\xi-\frac{p}{q}}\geq\abs{\xi-\frac{p_n}{q_n}}$.
+    \end{theorem}
+    \begin{proof}
+        由于 $p_n q_{n-1}-p_{n-1}q_n=\pm 1$，于是 ${[p_n,q_n]}^T,{[p_{n-1},q_{n-1}]}^T$ 构成 $\Z^2$ 一组基，于是设 $\begin{cases}
+            p=up_n+vp_{n-1}\\
+            q=uq_n+vq_{n-1}\\
+        \end{cases}$，于是 $u,v\neq 0$ 时（有一个为 $0$ 是平凡的），由 $q$ 上界，反证法知 $uv<0$. 设 $\delta_k=q_k \xi-p_k$，则 $q\xi-p=u\delta_n+v\delta_{n-1}$，由于 $\delta_n \delta_{n-1}<0$，于是 $\abs{q\xi-p}=\abs{u}\abs{\delta_n}+\abs{v}\abs{\delta_{n-1}}$，这时直接代入 $q$ 的式子，分类讨论 $u,v$ 符号即证.
+    \end{proof}
+
+    \begin{theorem}[渐进分数的最佳逼近 2 (11.8)]\label{定理11.8.2}
+        设 $\xi\in (0,1)$ 的第 $k$ 个渐进分数是 $\frac{p_k}{q_k}$，则 $\forall q<q_{n+1},\forall p\in\N,\abs{q\xi-p}\geq\abs{q_n \xi-p_n}$. 设 $\lambda=e^{i 2\pi \xi}$，则有估计 $\frac{2}{q_{n+1}}\leq \abs{\lambda^{q_n}-1}\leq \frac{2\pi}{q_{n+1}}$.
+    \end{theorem}
+    \begin{proof}
+        第一个结论直接使用定理~\ref{定理11.8.1} 的证明过程，但注意这里需要考虑 $u>0,\;v>0$ 的情形，这时由 $q$ 上界知 $(k_{n+1}-u)q_n+(1-v)q_{n-1}>0$，于是 $0<u<k_{n+1}$，又注意到 $\abs{\delta_{n-1}}=k_{n+1}\abs{\delta_n}+\abs{\delta_{n+1}}$，于是 $v\abs{\delta_{n-1}}-u\abs{\delta_n}>\abs{\delta_{n+1}}+\abs{\delta_n}$，得证.
+
+        第二个结论则注意到 $4\delta<2\sin\pi \delta<2\pi \delta$ 由于 $0<\delta<\frac{1}{2}$ 而成立；设 $\delta=\min\limits_{p\in\N}\abs{q\xi-p}$，则 $\abs{\lambda^q-1}=2\sin(\pi\delta)$，于是只需证 $\frac{1}{2q_{n+1}}<\delta_n<\frac{1}{q_{n+1}}$. 右端注意到公式 $p_{n+1}q_n-p_n q_{n+1}={(-1)}^{n+1}$ 并辅助画图即证，左端则使用完全商记法，设 $\xi=[k_1,\ldots,k_n,\xi_{n+1}]$，其中 $\xi_{n+1}=k_{n+1}+[k_{n+2},k_{n+3},\ldots]$，于是 $k_{n+1}<\xi_{n+1}<k_{n+1}+1$，且 $\xi=\frac{\xi_{n+1}p_n+p_{n-1}}{\xi_{n+1}q_n+q_{n-1}}$，于是 $\abs{\delta_n}=\frac{1}{\xi_{n+1}q_n+q_{n-1}}$，代入即证（左端也可以以此得证）.
+    \end{proof}
+
+    \begin{corollary}[Diophantine 条件 (11.9)]
+        无理数 $\xi$ 是 Diophantine 的当且仅当存在多项式 $f$，使得对应连分数表示的任意 $q_{n+1}<f(q_n)$；特别的，$\xi\in\cD(\kappa)$ 对应的 $f$ 满足 $\deg(f)=\kappa-1$. 更特别的，$\kappa=2$ 时 $\frac{q_{n+1}}{q_n}$ 有界，这也等价于 $k_n=\frac{q_{n+1}-q_{n-1}}{q_n}$ 有界.
+    \end{corollary}
+    \begin{proof}
+        第一个结论的 $\Leftarrow$ 方向、第二个结论：使用定理~\ref{定理11.8.2} 第二个结论的左端并注意去找比 $q$ 小的最大的 $q_n$.
+        
+        第一个结论的 $\Rightarrow$ 方向：使用定理~\ref{定理11.8.2} 第二个结论的右端即证.
+    \end{proof}
+
+    \section{分析基础}
+    \begin{lemma}[对数平均 (A.2)]
+        设 $f:\D\to \C$ 全纯且不恒为 $0$，给定半径 $0<r<1$，设平均值 $A(f,r)=\frac{1}{2\pi}\int_{0}^{2\pi}\log\abs{f(re^{i\theta})}d\theta$. $A(f,r)$ 若视为 $\log r$ 的函数则连续（由于对数积分性质，即使 $\partial \D_r$ 上有 $f$ 零点，$A(f,r)$ 也能良定义且连续）且分段线性，且 $\frac{dA}{d\log r}$ 是 $f$ 在 $\D_r$ 内的根的数量（记重）.
+    \end{lemma}
+    \begin{proof}
+        由辐角原理，$n=\frac{1}{2\pi i}\oint_{\abs{z}=r}d\log f(z)$ 记录了 $f$ 在 $\D_r$ 内的零点数. 设 $\cA=\{z\mid r_0<\abs{z}<r_1\}$ 满足 $\cA$ 不含 $f$ 零点，则由上知 $\log f(z)-\log z^n$ 在 $\cA$ 上单值全纯. 注意到 $d\theta=\frac{dz}{iz}$，于是由 Cauchy 积分定理，$\int_{0}^{2\pi}(\log f(re^{i\theta})-\log {(re^{i\theta})}^n)d\theta$ 与 $r\in (r_0,r_1)$ 无关，取实部则知 $A(f,r)-A(z^n,r)$ 在 $(r_0,r_1)$ 上恒常，而 $A(z^n,r)=n\log r$.
+    \end{proof}
+
+    \begin{theorem}[Jensen (A.1)]\label{定理A.1}
+        $A(f,r)$ 随 $r$ 单调递增.
+    \end{theorem}
+
+    \begin{theorem}[F. \& M. Riesz 定理 (A.3)]\label{定理A.3}
+        设 $f:\D\to \C$ 有界全纯，给定 $c_0\in\C$，设正测度集 $E\subset [0,2\pi]$ 满足 $\forall\; \theta\in E,\; \lim\limits_{r\to 1^-}f(re^{i\theta})$ 良定义且为 $c_0$，则 $f(\D)=\{c_0\}$ 恒常.
+    \end{theorem}
+    \begin{proof}
+        不妨设 $c_0=0,f(\D)\subset \D$. 设 $E(\varepsilon,\delta)=\{\eta\in E\mid \abs{f(re^{i\theta})}<\varepsilon,\;\forall\; r\in (1-\delta,1)\}$. 显然固定 $\varepsilon$ 时，$\forall\; \delta_1<\delta_2,\;E(\varepsilon,\delta_1)\supset E(\varepsilon,\delta_2)$，且由 $f$ 连续性知 $E=\lim\limits_{\delta\to 0}E(\varepsilon,\delta)$，于是由测度性质，Lebesgue 测度 $\lim\limits_{\delta\to 0}\ell(E(\varepsilon,\delta))=\ell(E)$，从而 $\exists\;\delta(\varepsilon)>0$ 满足 $\ell(E(\varepsilon,\delta(\varepsilon)))>\frac{\ell(E)}{2}$.
+
+        固定 $\varepsilon$，则 $\forall\; r\in (1-\delta(\varepsilon),1)$，由于 $\abs{f(z)}<1$，则 $\forall\;\theta\in [0,2\pi],\;\log\abs{f(re^{i\theta})}<0$；而且 $\forall\;\theta\in E(\varepsilon,\delta(\varepsilon)),\; \log\abs{f(re^{i\theta})}<\log\varepsilon$，于是 $2\pi A(f,r)<\log\varepsilon\cdot \frac{\ell(E)}{2}$. 于是可以令 $\varepsilon\to 0$ 则 $\lim\limits_{r\to 1^-}A(f,r)=-\infty$，与定理~\ref{定理A.1} 矛盾，除非 $f$ 恒为 $0$.
+    \end{proof}
+
+    \section{不列出证明的结论}
+    \begin{theorem}[Bryuno, Rüssmann (11.10)]\label{定理11.10}
+        记号同上，若 $\sum\limits_{n=1}^{\infty}\frac{\log q_{n+1}}{q_n}<\infty$，则以 $\lambda=e^{i 2\pi \xi}$ 为乘子的全纯不动点可以局部线性化.
+    \end{theorem}
+    \begin{proof}[参考链接]
+        使用 Newton 迭代法~\cite{russmann}.
+    \end{proof}
+    \begin{note}
+        参考~\cite{abate}，我们用习题形式给出证明的概要.
+        \begin{enumerate}[(1)]
+            \item 设 $\Omega_{\lambda}(m)=\min\limits_{1<k\leq m}\abs{\lambda^k-\lambda},\; m\geq 2$（也可记 $\Omega_{\lambda}(1)=\Omega_{\lambda}(2)+1$ 以保持 $\Omega_{\lambda}$ 关于 $m$ 的单调性）. 请证明：$\sum\limits_{k=0}^{\infty}\frac{\log q_{k+1}}{q_k}<\infty\Leftrightarrow \sum\limits_{k=0}^{\infty}\frac{1}{2^k}\log\frac{1}{\Omega_{\lambda}(2^{k+1})}$. 提示：通过对积分分段估计，可以证明两个级数都与积分 $\int_{1}^{+\infty}\frac{1}{t^2}\log\frac{1}{\Omega_{\lambda}(t)}$ 同敛散（$\Omega_{\lambda}$ 可以用分段函数的方法延拓到 $t\geq 1$；$\Omega_{\lambda}$ 定义中的 $\abs{\lambda^k-\lambda}$ 可以换为定理~\ref{定理11.8.2} 中引入的 $\delta$）.
+            \item 级数 $\sum\limits_{k=0}^{\infty}a_k z^k$ 收敛半径非 $0$ 当且仅当 $\sup\limits_{k\geq 0}\frac{1}{k}\log\abs{a_k}<\infty$.
+            \item 采用级数方法，设形式幂级数 $h(z)=z+\sum\limits_{k=2}^{\infty}h_k z^k$ 是共轭函数 $f(h(z))=h(\lambda z)$，则 $\abs{h_k}\leq \varepsilon_k^{-1}\sum\limits_{\stackrel{k_1+\cdots+k_{\nu}=k}{\nu\geq 2}}\abs{h_{k_1}}\cdots\abs{h_{k_{\nu}}}$，其中 $\varepsilon_k=\abs{\lambda^k-\lambda}$.
+            \item 设 $\alpha_k=\sum\limits_{\stackrel{k_1+\cdots+k_{\nu}=k}{\nu\geq 2}}\alpha_{k_1}\cdots\alpha_{k_{\nu}}$，初值 $\alpha_1=1$；$\delta_k=\varepsilon_k^{-1}\max\limits_{\stackrel{k_1+\cdots+k_{\nu}=k}{\nu\geq 2}}\delta_{k_1}\cdots \delta_{k_{\nu}}$，初值 $\delta_1=1$，归纳证明 $\abs{h_k}\leq \alpha_k\delta_k$. 这时命题转化为证明 $\sup\limits_{k\geq 0}\frac{1}{k}\log\abs{a_k}<\infty$ 和 $\sup\limits_{k\geq 0}\frac{1}{k}\log\abs{\delta_k}<\infty$.
+            \item 对 $\alpha_k$，使用生成函数法，设 $\alpha=\sum\limits_{k=1}^{\infty}\alpha_k t^k$，证明 $\alpha-t=\frac{\alpha^2}{1-\alpha}$，从而可以解出 $0$ 附近的解析解.
+            \item 通过归纳法，有唯一分解 $\delta_k=\varepsilon_{l_0}^{-1}\varepsilon_{l_1}^{-1}\cdots\varepsilon_{l_q}^{-1}$，其中 $k=l_0>l_1\geq \cdots\geq l_q\geq 2$. 设 $N_m(k)$ 是 $\delta_k$ 分解中满足 $\varepsilon_l<\frac{1}{4}\Omega_{\lambda}(m)$ 的因子 $\varepsilon_l^{-1}$ 数量. 通过归纳和分类讨论证明：$N_m(k)\leq\begin{cases}
+                0,&k\leq m\\
+                \frac{2k}{m}-1,&k>m.\\
+            \end{cases}$ 提示：固定 $m$，$k\leq m$ 显然，而 $k>m$ 时可以使用归纳法，考察下标与 $m$、与 $k-m$ 的关系.
+            \item 满足 $\frac{1}{4}\Omega_{\lambda}(2)\leq \varepsilon_l$ 的因子数量显然不大于总的因子数量. 通过归纳证明总因子数量不大于 $2k-1$. 于是可以求出 $\frac{1}{k}\log\delta_k=\sum\limits_{j=0}^{q}\frac{1}{k}\log\varepsilon_{l_j}^{-1}$ 的上界. 提示：这一上界相当宽松，不要想复杂了.
+        \end{enumerate}
+    \end{note}
+
+    \begin{theorem}[Yoccoz (11.11)]
+        若 $\sum\limits_{n=1}^{\infty}\frac{\log q_{n+1}}{q_n}$ 发散，则 $f(z)=z^2+\lambda z$ 在 $0$ 处的不动点不能局部线性化，而且 $0$ 有小周期性质.
+    \end{theorem}
+    \begin{remark}
+        这样的和发散时，可以认为 $f$ 极端接近周期函数.
+    \end{remark}
+    \begin{proof}[参考链接]
+        见~\cite{yoccoz}.
+    \end{proof}
+
+    \begin{theorem}[Perez-Marco (11.12)]
+        设 $\sum\limits_{n=1}^{\infty}\frac{\log\log q_{n+1}}{q_n}<\infty$，则以 $\lambda$ 为乘子的全纯 Cremer 不动点（从而 $\sum\limits_{n=1}^{\infty}\frac{\log q_{n+1}}{q_n}=\infty$）有小周期性质. 反之（通用情况），可以找到一个以 $\lambda$ 为乘子的全纯 Cremer 不动点 $\hat{z}$，使得每个包含在 $\hat{z}$ 的任意邻域的前向轨道都以 $\hat{z}$ 为聚点（从而没有小周期性质）.
+    \end{theorem}
+    \begin{proof}[参考链接]
+        见~\cite{marco}.
+    \end{proof}
+
+    \begin{theorem}[Poincaré-Siegel 线性化定理 (11.4)]\label{定理11.4}
+        记号同上，若旋转数 $\xi$ 是 Diophantine 数，则 $f$ 在 $z_0$ 可以局部线性化.
+    \end{theorem}
+    \begin{proof}[参考链接]
+        使用优级数法~\cite{katok}.
+    \end{proof}
+
+    \begin{corollary}[Poincaré-Siegel 定理~\ref{定理11.4} 的粗略表述]
+        性质 $P$ 定义在 $\xi\in\R\setminus\Z$ 上，表述如下：任意 $f$ 是有理函数且 $\deg(f)\geq 2$，$z_0$ 是其不动点且乘子 $f'(z_0)=e^{2\pi i\xi}$，则 $z_0$ 都一定能局部线性化. $P$ a.e. 为真.
+    \end{corollary}
+    \begin{proof}
+        非 Diophantine 数作为 $(\R/\Z)\setminus \cD(2+)$ 的子集，由定理~\ref{引理11.7} 而在 $\R\setminus\Z$ 上零测.
+    \end{proof}
+
+    \section{列出证明的结论}
+    \begin{definition}[共形半径]
+        $\forall\; \lambda\in \overline{\D}$，设共性半径 $\sigma(\lambda)$ 是 $f_{\lambda}$ 最大的线性化邻域，也即最大的 $\sigma$ 使得 $\psi_{\lambda}:\D_{\sigma}\to\C$ 是单叶映射且 $\psi_{\lambda}(0)=0,\;\psi_{\lambda}'(0)=1$ 且 $\psi_{\lambda}(\lambda w)=f_{\lambda}(\psi_{\lambda}(w)),\; 0\leq \abs{w}<\sigma$. 若不存在这样的 $\sigma$，则设 $\sigma(\lambda)=0$.
+    \end{definition}
+    \begin{remark}
+        $\sigma(\lambda)>0$ 当且仅当 $0<\abs{\lambda}<1$ 或 $\abs{\lambda}=1$ 且 $f_{\lambda}$ 在 $0$ 处是 Siegel 点. $\sigma$ 零点在 $S^1=\{\abs{\lambda}=1\}$ 上稠密，因为抛物点都是 $\sigma$ 零点.
+    \end{remark}
+
+    \begin{definition}[上半连续性]
+        设 $f:X\to \R$ 是实值函数，$X$ 是拓扑空间，则 $f$ 上半连续指 $\forall\; x_0\in X,\; \varlimsup\limits_{\stackrel{x\to x_0}{x\neq x_0}}f(x)\leq f(x_0)$. 等价的，$\forall\;\sigma_0\in\R,\;\{x\in X\mid \sigma(x)\geq \sigma_0\}$ 是闭集.
+    \end{definition}
+
+    \begin{lemma}[$\sigma$ 基本性质]
+        共形半径函数 $\sigma$ 有界且上半连续. 另外，存在全纯函数 $\eta:\D\to \R$ 使得 $\sigma|_{\D}=\abs{\eta}$.
+    \end{lemma}
+    \begin{proof}
+        有界：当 $\abs{z}>2$ 时，$\abs{f_{\lambda}(z)}=\abs{z(z+\lambda)}>\abs{z}$，从而 $z$ 落在 $\infty$ 的吸引域中，从而不落在 $0$ 的 Siegel 圆盘中，于是 $\psi(\D_{\sigma})\subset\D_2$，从而由 Schwarz 引理知 $\sigma\leq 2$（反证即知）.
+
+        上半连续：任意给定 $\sigma_0$，设 $\Lambda_0=\{\lambda\in X\mid \sigma(\lambda)\geq \sigma_0\}$，则 $\lambda\in \Lambda_0\Rightarrow \exists\; \psi_{\lambda}:\D_{\sigma_0}\to \D_2$ 全纯，于是 $\{\psi_{\lambda}\mid \sigma(\lambda)\geq \sigma_0\}$ 是 $\D_{\sigma_0}\to \D_2$ 的全纯函数族，由于是从双曲面到双曲面的全纯函数族，因此是正规族，从而 $\forall\;\lambda\in \overline{\Lambda_0}$，取 ${\{\lambda_n\}}_{n\geq 1}\subset \Lambda_0$ 趋于 $\lambda$，则 ${\{\psi_{\lambda_n}\}}_{n\geq 1}$ 中存在一致收敛子列趋于全纯函数（由 Weierstrass 定理知全纯） $\psi_{\lambda}:\D_{\varepsilon_0}\to\D_2$，且将 $\psi_{\lambda}(\lambda w)=\lim\limits_{n\to\infty}\psi_{\lambda_n}(\lambda_n w)=\lim\limits_{n\to\infty}f_{\lambda_n}(\psi_{\lambda_n}(w))=f_{\lambda}(\psi_{\lambda}(w))$，于是 $\lambda\in\Lambda_0$，从而 $\Lambda_0$ 闭.
+
+        接下来我们在 $0<\abs{\lambda}<1$ 上工作，尝试构造 $\eta$，然后证明 $0$ 是 $\eta$ 的可去奇点. 由 Kœnigs 线性化的推广推论，$\phi_{\lambda}:\cA_{\lambda}\to \C$ 关于自变量 $z$ 和参变量 $\lambda$ 都全纯. 显然 $f_{\lambda}$ 的临界点 $-\frac{\lambda}{2}\in\cA_{\lambda}$，因此定义 $\eta(\lambda)=\phi_{\lambda}(-\frac{\lambda}{2})$，由找临界点引理知 $\sigma(\lambda)=\abs{\eta(\lambda)}$. 由于 $\sigma$ 上半连续且 $\sigma\geq 0$，于是 $\lim\limits_{\lambda\to 0}\abs{\eta}(\lambda)=0$ 必须成立，从而 $0$ 是 $\eta$ 可去奇点.
+    \end{proof}
+    \begin{remark}
+        由证明过程以及 Kœnigs 线性化定理的证明过程，我们知道，$\eta_i=\frac{1}{\lambda^i}f_{\lambda}^{\circ i}(-\frac{\lambda}{2})$ 满足 $\lim\limits_{i\to\infty}\eta_i=\eta$. 据此我们写出 $\eta_i$ 递推式：$\eta_0=-\frac{\lambda}{2},\eta_{i+1}=\eta_i+\lambda^{i-1}\eta_i^2$，于是我们可以计算出 $\eta$ 幂级数展开的各项系数.
+    \end{remark}
+    \begin{corollary}[Cremer/抛物点的判定 (11.16)]\label{推论11.16}
+        $\abs{\lambda_0}=1$ 时，$f_{\lambda_0}$ 在 $0$ 处是 Cremer 点或抛物点，当且仅当 $\lim\limits_{\stackrel{\lambda\to\lambda_0}{\abs{\lambda}<1}}\eta(\lambda)$ 良定义且为 $0$.
+    \end{corollary}
+
+    \begin{theorem}[Poincaré-Siegel 定理~\ref{定理11.4} 的弱化 (11.14)]
+        $f_{\lambda}(z)=z^2+\lambda z$ 对 a.e. $\xi\in \R/\Z$ 都能在 $0$ 处局部线性化. 仍设 $\lambda=e^{i 2\pi \xi}$.
+    \end{theorem}
+    \begin{proof}
+        使用推论~\ref{推论11.16} 和定理~\ref{定理A.3}，反证即证.
+    \end{proof}
+
+    \begin{remark}[Yoccoz 结论]
+        由上半连续性显然 $\sigma(e^{2\pi i\xi})\geq \varlimsup\limits_{r\to 1^-}\abs{\eta(re^{2\pi i\xi})}$，而 Yoccoz 证明了等号恒成立.
+    \end{remark}
+    
+    \begin{theorem}[小周期 (11.13)]
+        设 $\{f_{\lambda}\}$ 是一族全纯（对参数 $\lambda$ 也全纯/连续，对自变量 $z$ 在 $0$ 小邻域全纯）的非线性有理函数，且满足 $f_{\lambda}(0)=0,\; f_{\lambda}'(0)=\lambda$. 对通用的 $\lambda\in \partial\D$，$f_{\lambda}$ 在 $0$ 处有小周期性质.
+    \end{theorem}
+    \begin{proof}
+        首先构造开稠集 $U_{\varepsilon}$ 满足 $\forall\; \lambda\in U_{\varepsilon},\; \D(0,\varepsilon)$ 包含一个 $f_{\lambda}$ 的非 $0$ 周期轨道. 设任意 $\lambda_0=e^{2\pi i\frac{p}{q}}\neq 1$，选取足够小的 $\varepsilon'<\varepsilon$ 使得 $\overline{\D_{\varepsilon'}}$ 内 $f_{\lambda_0}$ 没有周期 $\leq q$ 的非 $0$ 周期点. 于是 $f_{\lambda_0}^{\circ k}$ 在 $1\leq k<q$ 时 $0$ 为一重不动点（即 $f_{\lambda_0}^{\circ k}(z)-z$ 在 $0$ 处为一重根），$k=q$ 时 $0$ 为 $m\geq 2$ 重不动点. 由于 $\{f_{\lambda}\}$ 关于 $\lambda$ 的全纯性/连续性，不妨设 $U(\frac{p}{q})$ 是 $\lambda_0$ 的足够小邻域，以至于 $\forall\;\lambda\in U(\frac{p}{q})$，$f_{\lambda}$ 作为 $f_{\lambda_0}$ 的扰动，所有周期轨道都不跨过 $\partial \D_{\varepsilon'}$，于是由重根分裂引理~\ref{重根分裂}，$\D_{\varepsilon'}$ 内 $f_{\lambda}$ 恰有一个完整的周期为 $q$ 的轨道（见引理~3.10.2.3/教材引理~10.4）. 于是 $U_{\varepsilon}=\bigcup\limits_{0<\frac{p}{q}<1}U(\frac{p}{q})$，由构造方式显然开稠.
+
+        于是 $U=\bigcap\limits_{n\in\N}U_{\frac{1}{n}}$ 满足 $\forall\;\lambda\in U,\; f_{\lambda}$ 有小周期性质.
+    \end{proof}
+
+    \begin{theorem}[Cremer 不可线性化定理 (11.2)]\label{定理11.2}
+        给定 $\lambda\in\{|z|=1\},\;d\geq 2$，若 $\sqrt[d^q]{\frac{1}{|\lambda^q-1|}}$ 在 $q\to\infty$ 时无界，则：若有理函数 $f$ 满足 $z_0$ 是无理中性不动点、$f'(z_0)=\lambda$、$\deg(f)=d$，则 $z_0$ 不能局部线性化.
+    \end{theorem}
+    \begin{proof}
+        根据条件，可以取递增自然数列 $\{q_n\}$，使得 $\sqrt[d^{q_n}]{|\lambda^{q_n}-1|}<\frac{1}{n}$.
+
+        首先考虑首一多项式 $f(z)=z^d+\cdots+\lambda z,\; d\geq 2$，于是 $f^{\circ q}(z)=z^{d^q}+\cdots+\lambda^q z$，于是 $f^{\circ q}$ 的不动点满足 $z^{d^q}+\cdots+(\lambda^q-1)z=0$，从而由韦达定理 $d^q-1$ 个非 $0$ 不动点模长乘积为 $\abs{\lambda^q-1}$，于是存在一个不动点 $z$ 满足 $\abs{z}^{d^q-1}\leq \abs{\lambda^q-1}$，取 $q=q_n$ 则 $0<\abs{z}\leq \sqrt[d^{q_n}-1]{\abs{\lambda^{q_n}-1}}<\sqrt[d^{q_n}]{|\lambda^{q_n}-1|}<\frac{1}{n}$，于是 $0$ 的任意邻域都包含至少一个周期点（没有包含完整轨道，不能说是小周期性质，但可以说明是 Cremer 点）.
+
+        接下来考虑有理函数 $f$ 且 $\deg(f)\geq 2$，由于 $\lambda\neq 0$，于是设 $f=\frac{P}{Q}$ 时 $P$ 的一次项非 $0$，从而 $0$ 是 $P$ 的单根，分类知 $\exists\; z_1\in \hat{\C}\setminus\{0\}$ 满足 $f(z_1)=0$. 通过共轭 Möbius 变换，不妨设 $f(\infty)=f(0)=0$，于是不妨设 $P(z)=\ast z^{d-1}+\cdots+\ast z^2+\lambda z,\; Q(z)=z^d+\cdots+1$，其中 $\ast$ 表示系数（可能为 $0$）. 归纳可知设 $f^{\circ q}=\frac{P_q}{Q_q}$，则 $P_q(z)=\ast z^{d^q-1}+\cdots+\ast z^2+\lambda^q z,\; Q_q(z)=z^{d^q}+\cdots+1$，从而 $f^{\circ q}$ 的不动点满足 $0=zQ_q(z)-P_q(z)=z(z^{d^q}+\cdots+(1-\lambda^q))$，从而与前述同理得证.
+    \end{proof}
+    \begin{corollary}[Cremer 定理~\ref{定理11.2} 的通用表述]
+        性质 $P$ 定义在 $\lambda\in\R\setminus\Z$ 上，表述如下：任意 $f$ 是有理函数且 $\deg(f)\geq 2$，$z_0$ 是其不动点且乘子 $\lambda=f'(z_0)=e^{2\pi i\xi}$，则 $z_0$ 都一定不能局部线性化. $P$ 通用为真.
+    \end{corollary}
+    \begin{proof}
+        使用例~\ref{例1.9} 即证.
+    \end{proof}
+
+    \begin{definition}[后临界集]
+        设 $f$ 是有理函数，$C$ 是 $f$ 临界点集，定义后临界集 $P=P(f)=\{f^{\circ k}(c)\mid k>0,\; c\in C\}$.
+    \end{definition}
+    \begin{theorem}[无理中性不动点与临界点]
+        对有理函数 $f$，Cremer 点和 Cremer 周期点都落在闭包 $\overline{P}(f)$ 内；Siegel 圆盘（若是 Siegel 周期轨道，则每个周期点都有自己的 Siegel 圆盘）的边界也都落在 $\overline{P}(f)$ 内.
+    \end{theorem}
+    \begin{proof}
+        设 $d=\deg(f),\; U=\hat{\C}\setminus\overline{P},\; V=f^{-1}(U)$，则容易验证 $V\subset U$. 由于 $U$ 上没有临界点，则 $f:V\to U$ 是覆叠映射（局部同胚），且容易知道其覆叠次数是 $d$.
+
+        若 $\overline{P}$ 不足三点，则由于 $V$ 是 $U$ 的覆叠空间且 $V\subset U$，则必有 $V=U$，通过共轭不妨设 $V=U=\C\setminus\{0\}$，于是不妨设 $f(0)=0$（$f(0)=\infty$ 的情况同理），则 $f'(0)=0$ 且 $f'$ 只有一个零点 $0$，于是只能有 $f(z)=z^d$（$f(0)=\infty$ 时 $f(z)=z^{-d}$），但是这里没有 Cremer 点或 Siegel 圆盘，矛盾.
+
+        于是 $\overline{P}$ 至少三点，从而 $V, U$ 上的每个连通支都是双曲的.
+        
+        我们先考虑不动点，设 $z_0=f(z_0)\in U\Rightarrow z_0\in V$，设所在连通分支分别为 $U_0,V_0$，若 $V_0=U_0$ 则由双曲面无 Julia 集引理知 $z_0\notin J(f)$，从而由引理~\ref{引理11.1} 知 $z_0$ 不是 Cremer 点.
+
+        接下来设 $V_0\subsetneq U_0$，则由 Pick 定理，$i:V_0\hookrightarrow U_0$ 既不是共形映射也不是覆叠映射，从而一定严格缩小双曲距离. 但是 $f:V_0\to U_0$ 是覆叠映射，从而 $\forall\; x\neq y\in V_0$ 且足够靠近，都有 $\dist_{U_0}(f(x),f(y))=\dist_{V_0}(x,y)>\dist_{V_0}(x,y)$，从而 $z_0$ 是严格的排斥不动点，从而不是 Cremer 点.
+
+        接下来我们考虑 Siegel 圆盘 $\Delta$（注意到由 Siegel 圆盘定义，$\Delta=f(\Delta)$）的边界. 设圆心为 $z_0$. 首先注意到由 Siegel 圆盘引理，$\Delta\setminus\{z_0\}$ 可以分为“圆周” $\Gamma_r=\psi(\{\abs{z}=r\}),\; 0<r<1$ 的无交并，其中 $\psi:\D\to \Delta$ 是共形映射；且 $f(\Gamma_r)=\Gamma_r$. 另外，由于临界点只有有限个，则 $\overline{P}\cap \Delta\setminus\{z_0\}$ 只与有限个 $\Gamma_r$ 相交. 因此，任意 $U=\hat{\C}\setminus \overline{P}$ 的连通支 $U_0$，若与 $\partial\Delta$ 有交集，由于是开集，必然会包含整个 $\partial\Delta$ 以及其邻域，从而会包含所有足够靠近的 $\Gamma_r$；同理，$f^{-1}(U_0)$ 的连通支 $V_0$，若与 $\partial\Delta$ 相交（从而与 $U_0$ 相交；存在性由 Julia 集不变性引理得证），则也一定会包含 $\partial\Delta$ 的小邻域，从而包含所有足够靠近 $\partial\Delta$ 的 $\Gamma_r$. 由于 $V\subset U$，则容易证明 $V_0\subset U_0$（使用连通性）. 同样分类：若 $V_0=U_0$ 则同理 $U_0$ 落在 Fatou 集内而不可能包含 $\partial\Delta\subset J(f)$；若 $V_0\subsetneq U_0$，则同样 $\dist_U(f(x),f(y))>\dist_U(x,y)$，于是 $f$ 会把足够靠近 $\partial\Delta$ 的 $\Gamma_r$ 的长度映得更长，但是 $f(\Gamma_r)=\Gamma_r$，从而 $f(\Gamma_r)$ 长度和 $\Gamma_r$ 相等，矛盾.
+
+        最后，通过考虑迭代（设周期为 $k$ 则考虑 $f^{\circ k}$）并且注意到 $P(f^{\circ k})=P(f)$（注意 $P$ 的定义是临界点之后的点，不包含临界点本身），可以证明上述结论在周期轨道下也成立.
+    \end{proof}
+
+    \begin{conjecture}
+        （成书时）未解决的问题列表：
+        \begin{itemize}
+            \item 有理函数若有 Cremer 点，那么它是否一定有小周期性质？
+            \item 含 Cremer 点的 Julia 集是否恒有正测度/恒有零测度？
+            \item 非线性有理函数在 Bryuno 条件不满足时是否能有 Siegel 圆盘？
+        \end{itemize}
+    \end{conjecture}
+
+    \begin{thebibliography}{}
+        \bibitem{katok}
+        A. Katok, B. Hasselblatt, \emph{Introduction to the Modern Theory of Dynamical Systems}, Cambridge University Press (1995), 94--99.
+
+        \bibitem{roth}
+        H. Davenport and K. F. Roth, \emph{Rational approximations to algebraic numbers}, Mathematika 2 (1955), 160--167.
+
+        \bibitem{zorich}
+        B. A. 卓里奇，\emph{数学分析（第一卷）（第 7 版）}，李植译，高等教育出版社（2019），北京，86--87.
+
+        \bibitem{russmann}
+        H. Rüssmann, \emph{Über die Iteration analytischer Funktionen}, Journal of Mathematics and Mechanics, Vol. 17, No. 6 (1967), 523--532.
+
+        \bibitem{yoccoz}
+        J-C. Yoccoz, \emph{Petits diviseurs en dimension 1}, Astérisque (1995), 57--78
+
+        \bibitem{marco}
+        R. P. Marco, \emph{Sur les dynamiques holomorphes non linéarisables et une conjecture de V. I. Arnold}, Annales Scientifiques De L Ecole Normale Superieure 26 (1993), 565--644.
+
+        \bibitem{abate}
+        M. Abate, \emph{Discrete Holomorphic Local Dynamical Systems}, Springer, Berlin, Heidelberg (2010), 24--28.
+    \end{thebibliography}
+
+\end{document}
