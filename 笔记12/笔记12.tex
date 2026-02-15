@@ -1,0 +1,256 @@
+\documentclass[11pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, graphicx, float, subfigure, geometry, setspace, xfrac, unicode-math, tikz-cd, enumerate}
+\usepackage[bookmarks=true, colorlinks, citecolor=blue, linkcolor=black]{hyperref}
+\ctexset{
+    section = {
+        format = {\Large\bfseries},
+    }
+}
+\setmathfont{LatinModernMath-Regular}
+\setmathfont[range=\mathbb]{TeXGyrePagellaMath-Regular}
+
+% 导言区
+
+\title{单复变动力系统笔记 12. 全纯不动点公式}
+\author{zero-point\_}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{conjecture}[theorem]{猜想}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{note}[theorem]{自注}
+\newtheorem{property}[theorem]{性质}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{remark}[theorem]{注}
+\setlength{\parindent}{10ex}
+\pagestyle{plain}
+\geometry{left=2.54cm, right=2.54cm, top=3.18cm, bottom=3.18cm}
+\setstretch{1.5}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\ri}{\mathrm{résit}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\partials}[2]{\frac{\partial{#1}}{\partial{#2}}}
+
+\begin{document}
+	\maketitle
+
+    本章开始转入全局理论，研究全局下的周期点性质. 我们先给出并证明一些不动点的简单指标和公式.
+
+    \section{预备知识}
+    \begin{itemize}
+        \item Möbius 变换
+        \item 留数定理
+        \item 全纯函数唯一性定理
+        \item Rouché 定理
+        \item Cauchy-Hadamard 公式
+        \item Écalle-Voronin 分类（教材注~10.12）
+    \end{itemize}
+
+    \section{留数不动点指数}
+    \begin{lemma}[有理函数不动点数 (12.1)]\label{引理12.1}
+        设 $f:\hat{\C}\to\hat{\C}$ 是有理函数且 $\deg(f)\geq 0$（非常数），且 $f$ 不是恒等映射，则 $f$ 恰有 $d+1$ 个不动点（记重）.
+    \end{lemma}
+    \begin{proof}
+        通过共轭一个 Möbius 变换，不妨设 $f(\infty)\neq \infty$，则 $f(z)=\frac{p(z)}{q(z)}$，其中 $\deg(p)\leq\deg(q)=d$，$p,q$ 互素. 于是由代数基本定理得证.
+    \end{proof}
+    \begin{remark}
+        \begin{itemize}
+            \item 通过幂级数展开，显然不动点重数 $m\geq 2$ 当且仅当乘子 $\lambda=1$，这时 $\hat{z}$ 是抛物不动点且有 $m-1$ 个吸引花瓣.
+            \item 若 $f$ 以 $\infty$ 为不动点，则共轭上 $z\mapsto \frac{1}{z}$ 后再在 $0$ 处幂级数展开即知不动点的信息.
+            \item 不动点的代数重数 $m$ 在拓扑学中是 Lefschetz 不动点指数. 对于 $f:M\to M$ 是 $n$ 维紧流形上的映射，且只有有限个不动点，则每个不动点都有唯一的 Lefschetz 指数对应，且不动点指数之和实际上就是 Lefschetz 数 $\Lambda(f)$，从这个角度可以直接推广引理~\ref{引理12.1}.
+        \end{itemize}
+    \end{remark}
+
+    \begin{definition}[留数不动点指数]
+        设 $U\subset\C$ 是连通开集，$f:U\to \C$ 是全纯函数，$\hat{z}$ 是 $f$ 的孤立不动点，则 $f$ 在 $\hat{z}$ 处的留数不动点指数 $\iota(f,\hat{z})=\frac{1}{2\pi i}\oint\frac{dz}{z-f(z)}$.
+    \end{definition}
+
+    \begin{lemma}[$\lambda\neq 1$ 时的 $\iota$ (12.2)]
+        记号同上，若乘子 $\lambda\neq 1$，则 $\iota(f,\hat{z})=\frac{1}{1-\lambda}\neq 0$.
+    \end{lemma}
+    \begin{proof}
+        $\hat{z}$ 处幂级数展开即证.
+    \end{proof}
+    
+    \begin{property}[$\lambda=1$ 时 $f$ 的归一化形式幂级数 (问题~10-d)]
+        对 $f=z+az^{m}+O(z^{m+1})$ 进行如下共轭变换，从而归一化为 $f=z+z^m+bz^{2m-1}+O(z^N)$，其中 $N$ 是任意大正整数，$b$ 共轭不变：
+        \begin{enumerate}[(1)]
+            \item 设 $d=a^{-\frac{1}{m-1}}$，则 $d^{-1}f(dz)=z+z^m+O(z^{m+1})$，设 $f$ 是新的幂级数.
+            \item 设 $g_k(z)=z+cz^k$ 是 $0$ 处的局部微分同胚，则通过幂级数展开知 $f(g_k(z))-g_k(f(z))=(m-k)cz^{m+k-1}+O(z^{m+k})$，又由于 $g_k(f(z)+(m-k)cz^{m+k-1}+O(z^{m+k}))=g_k(f(z))+(m-k)cz^{m+k-1}+O(z^{m+k})$，于是 $g_k^{-1}\circ f\circ g_k(z)=f(z)+(m-k)cz^{m+k-1}+O(z^{m+k})$.
+            \item 设 $f_1=f$，$f_k=g_k^{-1}\circ f_{k-1}\circ g_k$，其中取合适的 $c$，使得 $f_k$ 的 $z^{m+k-1}$ 项可以通过共轭被消掉，这样的共轭可以持续到 $k=m-1$，跳过 $k=m$ 再继续共轭，直到 $k=N-m$，这时 $f_{m-1}=z+z^m+bz^{2m-1}+O(z^N)$.
+        \end{enumerate}
+    \end{property}
+    
+    \begin{lemma}[$\lambda=1$ 时的 $\iota$ (问题~12-a)]
+        考虑归一化形式 $f(z)=z+z^{n+1}+bz^{2n+1}+O(z^{2n+2})$，则 $\iota(f,0)=b$.
+    \end{lemma}
+    \begin{proof}
+        $\frac{1}{z-f(z)}=-\frac{1}{z^{n+1}}+bz^{-1}+O(1)$，留数定理即证.
+    \end{proof}
+
+    \begin{lemma}[重根分裂 \uppercase\expandafter{\romannumeral2}]\label{重根2}
+        设 $f(z)=z^m+O(z^{m+1})$ 在 $0$ 处有 $m$ 重根，则对于足够小的 $\alpha$，$f_{\alpha}(z)=f(z)+\alpha$ 在 $0$ 的小邻域 $\D_{\varepsilon}$ 处有 $m$ 个单根，且 $\alpha\to 0$ 时每个单根都趋于 $0$.
+    \end{lemma}
+    \begin{proof}
+        $f'_{\alpha}(z)=f'(z)$，由于 $f'(0)=0$ 但 $f'$ 不恒常，因此可以取 $\varepsilon>0$ 足够小使得 $f'_{\alpha}(z)\neq 0,\; z\in \D_{\varepsilon}\setminus\{0\}$（全纯函数唯一性定理）. 由 $0$ 也是 $f$ 的零点且 $f$ 不恒常，则不妨设 $\overline{\D_{\varepsilon}}\setminus\{0\}$ 上没有 $f$ 的零点，从而设 $0<\alpha<\min\limits_{\abs{z}=\varepsilon}\abs{f(z)}$，于是由 Rouché 定理，$f_{\alpha}$ 与 $f$ 在 $\D_{\varepsilon}$ 上的记重零点数相同，但是 $0$ 不是 $f_{\alpha}$ 零点，于是 $f_{\alpha}$ 的零点都是单根，从而得证；取 $\varepsilon\to 0$ 则 $\alpha\to 0$，得证.
+    \end{proof}
+    \begin{remark}
+        这一次我们使用常数项扰动，若使用一次项扰动，则见引理~11.1.10，也能得到类似结论.
+    \end{remark}
+
+    \begin{lemma}[$\iota$ 共轭不变 (12.3)]\label{引理12.3}
+        $\iota$ 是共轭不变量.
+    \end{lemma}
+    \begin{proof}
+        $\lambda$ 显然是共轭不变量，因此只需讨论 $\lambda=1$ 时 $\iota$ 是共轭不变量.
+
+        $\lambda=1$ 时，使用引理~\ref{重根2}，则 $f_{\alpha}$ 满足 $\sum\limits_{j}\iota(f_{\alpha},z_j)=\frac{1}{2\pi i}\oint_{\partial\D_{\varepsilon}}\frac{dz}{z-f_{\alpha}(z)}$ 是共轭不变量，两边取 $\varepsilon\to 0$，左边仍始终共轭不变，而右边趋于 $\iota(f,0)$.
+    \end{proof}
+
+    \begin{theorem}[有理函数不动点定理 (12.4)]\label{定理12.4}
+        设有理函数 $f:\hat{\C}\to \hat{\C}$ 不是恒等映射，则求不动点的指数之和 $\sum\limits_{z=f(z)}\iota(f,z)=1$.
+    \end{theorem}
+    \begin{proof}
+        通过 Möbius 变换来共轭，不妨设 $f(\infty)\notin \{0,\infty\}$，则由连续性，$\lim\limits_{z\to\infty}f(z)=f(\infty)\in \C\setminus\{0\}$，于是 $\frac{1}{z-f(z)}-\frac{1}{z}\sim \frac{f(\infty)}{z^2}$，两边对 $\partial \D_r$ 求围道积分并令 $r\to\infty$，则知 $\sum\limits_{z=f(z)}\iota(f,z)=\lim\limits_{r\to\infty}\frac{1}{2\pi i}\oint_{\partial \D_r}\frac{dz}{z-f(z)}=\lim\limits_{r\to\infty}\frac{1}{2\pi i}\oint_{\partial \D_r}\frac{dz}{z}=1$.
+    \end{proof}
+
+    \begin{example}[多项式]
+        任意 $\deg(f)\geq 2$ 的多项式 $f$，$f$ 在 $\infty$ 处的重数都 $\geq 2$，从而 $\lambda_{\infty}=0$，从而 $\iota(f,\infty)=1$，从而 $\C$ 上所有不动点的留数不动点指数之和为 $0$.
+
+        特别的，若二次多项式有两个不动点（从而重数都是 $1$），设其乘数 $\lambda,\mu$，则 $\frac{1}{1-\lambda}+\frac{1}{1-\mu}=0$，也即 $\lambda+\mu=2$. 特别的，考虑 $f_{\lambda}(z)=z^2+\lambda z$，则由上知 $f_{\lambda}$ 有一个吸引不动点当且仅当 $\lambda\in\D\cup(\D+2)$，因此这两个圆盘构成了 $\{f_{\lambda}\}$ 对应 Mandelbrot 集的主要部分.
+
+        若 $f$ 是常值函数 $f\equiv c$，则 $\iota(f,c)=1$.
+    \end{example}
+
+    \begin{example}[$\deg(f)=1$]
+        $\deg(f)=1$ 的有理函数 $f$，若有两个不动点（从而重数都为 $1$），设其乘数 $\lambda,\mu$，则同理 $\lambda\mu=1$.
+
+        一般的，若 $f$ 有一个不动点的乘子特别接近 $1$，则其 $\abs{\iota}$ 特别大，从而为了抵消它，一定有另一个不动点的乘子特别接近 $1$（或等于 $1$ 且 $b$ 很大）.
+    \end{example}
+
+    \begin{remark}[推广 (12.5)]
+        设 $f$ 是亏格为 $g$ 的紧 Riemann 曲面 $S$ 上的全纯函数，$f_*$ 是 $f$ 在全纯 $1$-形式空间（这是 $g$ 维的 $\C$-线性空间，是余切丛 $T^*S$ 的子空间） 上的诱导映射，则 $\sum\iota=1-\overline{\tr(f_*)}$.
+
+        对于 $\hat{\C}$，由于 $g=0$ 而迹为 $0$（另外也易证 $\hat{\C}$ 没有全纯 $1$-形式），从而得到定理~\ref{定理12.4}.
+    \end{remark}
+    \begin{note}
+        $\hat{\C}$ 没有全纯 $1$-形式的证明可以参考微分几何中 Hopf 定理的证明过程.
+    \end{note}
+
+    \begin{lemma}[吸引不动点的 $\iota$ 判据 (12.6)]\label{引理12.6}
+        设不动点的 $\lambda\neq 1$，则不动点是吸引的当且仅当 $\re(\iota)>\frac{1}{2}$；不动点是排斥的当且仅当 $\re(\iota)<\frac{1}{2}$.
+    \end{lemma}
+    \begin{proof}
+        由 $\iota=\frac{1}{1-\lambda}$ 而显然（考虑 $\partial\D_1(1)$ 在 $z\mapsto \frac{1}{z}$ 的像）.
+    \end{proof}
+
+    \begin{corollary}[有理函数不动点分类 (12.7)]
+        $\deg(f)\geq 2$ 的有理函数 $f$，若所有不动点都不是排斥的，则必有一个是 $\lambda=1$ 的.
+    \end{corollary}
+    \begin{proof}
+        由引理~\ref{引理12.1} 和定理~\ref{定理12.4}，反证法知 $\re(\sum\iota)=\sum\re(\iota)\geq \frac{d+1}{2}>1$ 导出了矛盾.
+    \end{proof}
+
+    \begin{corollary}[Julia 集非空 (12.8)]
+        非线性有理函数的 Julia 集非空.
+    \end{corollary}
+    \begin{remark}
+        我们已在教材引理~4.8 中证过这一命题了，这里用不动点理论又推出了这一命题.
+    \end{remark}
+
+    \section{迭代留数}
+
+    \begin{definition}[迭代留数]
+        考虑乘子为 $1$ 的不动点时，设重数为 $m$，我们定义迭代留数 $\ri(f,\hat{z})=\frac{m}{2}-\iota(f,\hat{z})$. 这对其他乘子的不动点也可以成立（$m=1$）.
+    \end{definition}
+    \begin{remark}
+        这一概念由 Écalle 引入以方便计算，法语名 résidu itératif.
+    \end{remark}
+
+    \begin{lemma}[迭代留数迭代引理 (12.9)]\label{引理12.9}
+        若 $\lambda=1$，则 $\forall\;k\in\Z\setminus\{0\}$，$\ri(f^{\circ k},\hat{z})=\frac{1}{k}\ri(f,\hat{z})$.
+    \end{lemma}
+    \begin{proof}
+        首先考虑 $\lambda=1-\varepsilon$ 再令 $\varepsilon\to 0$. 这时使用 L'Hôpital 法则知 $\ri(g^{\circ k},\hat{z})=\frac{1}{2}-\frac{1}{1-\lambda^k}=\frac{1}{2}-\frac{1}{k\varepsilon}-\frac{k-1}{2k}+o(1)=\frac{1}{2k}-\frac{1}{k\varepsilon}+o(1)=\frac{1}{k}\ri(g,\hat{z})+o(1)$.
+
+        接下来，设引理中的 $f$ 通过引理~\ref{重根2} 扰动得到 $f_{\alpha}$，于是 $\sum\limits_{j}\ri(f_{\alpha}^{\circ k},z_j)=\frac{1}{k}\sum\limits_{j}\ri(f_{\alpha},z_j)+o(1)$，由于 $o(1)$ 只与 $\lambda$ 有关，因此在 $\alpha\to 0$ 时，由于 $\lambda\to 1$，于是两边取极限得证（在引理~\ref{引理12.3} 的过程中，我们已经知道 $\iota$ 有“连续性”）.
+    \end{proof}
+
+    \begin{definition}[抛物吸引/排斥]
+        考虑乘子为 $1$ 的不动点 $\hat{z}$，若 $\re(\ri(f,\hat{z}))>0$ 则称其抛物排斥，若 $<0$ 则称其抛物吸引.
+    \end{definition}
+    \begin{remark}
+        乘子非 $1$ 的不动点显然也有：$\re(\ri(f,\hat{z}))>0$ 当且仅当其排斥，$<0$ 当且仅当其吸引.
+    \end{remark}
+
+    \begin{theorem}[Buff-Epstein 扰动定理 (12.10)]
+        对于 $f$ 的 $m$ 重不动点 $\hat{z}$，$\re(\ri(f,\hat{z}))\geq 0$ 当且仅当 $\forall\; \varepsilon>0,\; \exists\; f_{\varepsilon}$ 使得 $f_{\varepsilon}$ 与 $f$ 的一致度量距离 $<\varepsilon$，且 $f_{\varepsilon}$ 将 $f$ 的重根分裂为 $m$ 个单根，且每个单根都排斥. 对于吸引情况，也有类似结论.
+    \end{theorem}
+    \begin{proof}
+        $\Leftarrow$：由引理~\ref{引理12.9} 的证明过程显然.
+        
+        $\Rightarrow$：参考~\cite{buff} 的构造. 我们只证明吸引的情况. 不妨设 $\hat{z}=0$.
+
+        若 $\re(\ri(f,0))=0$，则设 $f_{\varepsilon}$ 满足方程 $\frac{1}{z-f_{\varepsilon}}=\frac{1}{z-f}+\frac{\varepsilon}{z}$，于是计算无穷小知 $f_{\varepsilon}$ 在 $0$ 处重数为 $m$，计算留数知 $\iota(f_{\varepsilon},0)=\iota(f,0)+\varepsilon$，取 $\re(\varepsilon)>0$ 则不动点转为下一种情形.
+        
+        于是接下来不妨设 $\re(\ri(f,0))>0$，设 $f(z)=z+z^m+\iota z^{2m-1}+O(z^{2m})$，这里 $\iota=\iota(f,0)$，设截断级数 $g(z)=z+z^m+\iota z^{2m-1}$，先对 $g$ 扰动：设 $\lambda_{\varepsilon}$ 满足 $\frac{1}{1-\lambda_{\varepsilon}}=\frac{i}{\varepsilon}+\frac{\iota}{m}$，于是 $\lambda_{\varepsilon}\in\D$. 设 $g_{\varepsilon}=\lambda_{\varepsilon}g$，于是 $g_{\varepsilon}$ 的不动点满足 $1+z^{m-1}+\iota z^{2(m-1)}=\frac{1}{\lambda_{\varepsilon}}$ 或 $z=0$，于是 $g_{\varepsilon}$ 有 $m$ 个单根，其中一个是 $0$，乘子是 $\lambda_{\varepsilon}$（从而吸引），从而 $\iota(g_{\varepsilon},0)=\frac{i}{\varepsilon}+\frac{\iota}{m}$；另外 $m-1$ 个（设为 $\alpha_1,\ldots,\alpha_{m-1}$）满足第一个方程（该方程的根都是单根；$m-1$ 个靠近 $0$，剩下 $m-1$ 个与 $0$ 距离很远），则由于 $\iota(g_{\varepsilon},0)+\sum\limits_{k=1}^{m-1}\iota(g_{\varepsilon},\alpha_k)\stackrel{\varepsilon\to 0}{=}\iota(g,0)=\iota$，又经过计算知这 $m-1$ 个的乘子恰好相同，于是 $\iota(g_{\varepsilon},\alpha_k)=-\frac{i}{(m-1)\varepsilon}+\frac{\iota}{m}+o(1)$，从而对足够小的 $\varepsilon$，由引理~\ref{引理12.6} 以及假设的条件知这些不动点都是吸引的.
+
+        最后将 $g$ 的扰动用在 $f$ 上，设 $f_{\varepsilon}$ 由式子 $\frac{1}{z-f_{\varepsilon}}-\frac{1}{z-g_{\varepsilon}}=\frac{1}{z-f}-\frac{1}{z-g}$ 定义，可以验证 $\frac{1}{z-f}-\frac{1}{z-g}=O(1)$，于是右端解析，从而两边取留数知 $\iota(f_{\varepsilon},\alpha)=\iota(g_{\varepsilon},\alpha)$，其中 $\alpha$ 距离 $0$ 足够近. 根据上述极点的分析，$f_{\varepsilon}$ 与 $g_{\varepsilon}$ 有相同的不动点，且对应不动点的 $\iota$ 相等，于是由引理~\ref{引理12.6} 知都是吸引的，于是 $f_{\varepsilon}$ 满足条件.
+    \end{proof}
+
+    \section{流与迭代留数}
+
+    \begin{property}[流的基本性质]\label{性质2.25}
+        在教材注~12.12 中，我们研究过了与抛物不动点相关的特殊的流. 这里我们更深入地介绍流的一些基本性质.
+        \begin{itemize}
+            \item 给定全纯函数 $v(z)$，则可以定义局部流 $f_t$：任给初值 $z_0$，则截面映射 $t\mapsto f_t(z_0)$ 满足 $\begin{cases}
+                \frac{d}{dt}f_t(z_0)=v(z)\\
+                z(0)=z_0\\
+            \end{cases}$.
+            \item 由 Picard-Lindelöf 定理的推论，$f_t(z)$ 在 $\abs{t}<\varepsilon(z)$ 上有定义，这里 $\varepsilon(z)>0$ 只与 $z$ 和 $v$ 有关.
+            \item 若 $v(0)=0$，则由解对初值的连续依赖性，$\forall\; t\in\R_+$，存在 $0$ 的邻域，使得其上 $f_t$ 良定义（因为 $f_t(0)\equiv 0$ 对所有 $t$ 成立）.
+            \item 更进一步的，$f_t(z)$ 对 $t,z$ 都全纯.
+            \item 使用流的性质 $f_{t+s}(z)=f_t(f_s(z))$ 以及链式法则，$\partials{f_t(z)}{t}=v(z)\partials{f_t(z)}{z}$.
+        \end{itemize}
+    \end{property}
+
+    \begin{lemma}[流的多重不动点 (12.11)]
+        若 $v(0)=v'(0)=0$，则 $\forall\; t\neq 0,\; f_t$ 都在 $0$ 处有一个 $m\geq 2$ 重不动点，且对应的迭代留数 $\ri(f_t,0)=\frac{1}{2\pi i t}\oint\frac{dz}{v(z)}$.
+    \end{lemma}
+    \begin{proof}
+        由引理~\ref{引理12.9}，并进行解析延拓，$\ri(f_t,0)=\frac{1}{t}\ri(f_1,0)$（首先对 $t\in\Q$，直接由引理~\ref{引理12.9} 成立）. 于是只需证 $t=1$ 的情况.
+
+        由 Taylor 展开 $f_t(z)=z+v(z)t+\sum\limits_{k=2}^{\infty}a_k(z)\frac{t^k}{k!}$，其中由性质~\ref{性质2.25} 知，系数 $a_{k+1}(z)=v(z)\frac{da_k(z)}{dz}$. 于是 $f_t(z)=z+tv(z)(1+O(t))$（这里要证明 $\sum\limits_{k=1}^{\infty}a_k'(z)\frac{t^{k-1}}{(k+1)!}=O(1)$，也即左侧在 $t=0$ 附近是 $t$ 的全纯函数，而注意到 $\partials{f_t(z)}{z}=1+tv'+\sum\limits_{k=2}^{\infty}a_k'(z)\frac{t^k}{k!}$ 在 $t=0$ 附近全纯，而 $\frac{a_k'(z)}{k!}>\frac{a_k'(z)}{(k+1)!}$，由 Cauchy-Hadamard 公式得证）.
+
+        最后代入公式计算留数，$2\pi i\iota(f_t,0)=-\frac{1}{t}\oint\frac{dz}{v(z)}+O(1)$，于是当 $t\to 0$ 时，$2\pi i\ri(f_1,0)=2\pi it\ri(f_t,0)=\oint\frac{dz}{v}+O(t)$令 $t\to 0$ 即证 $\ri(f_1,0)=\frac{1}{2\pi i}\oint\frac{dz}{v}$.
+    \end{proof}
+
+    \begin{proposition}[Fatou 坐标恒等式 (12.12)]
+        $I(f_t,\hat{z})+2\pi i\ri(f_t,\hat{z})=0$（记号 $I$ 见教材注~10.12）.
+    \end{proposition}
+    \begin{proof}
+        同样只需证 $t=1$ 情形. 对 $f_1$ 的每个花瓣 $\cP_j$ 取 Fatou 坐标 $\alpha_j:\cP_j\to \C$ 且满足 $d\alpha_j=\frac{dz}{v(z)}$（见教材注~10.12）. 取基点 $z_j\in\cP_{j-1}\cap \cP_j$，并设 $\alpha_{j+1}-\alpha_j=c_j$，于是 $2\pi i\ri(f_1,0)=\oint \frac{dz}{v(z)}=\sum\limits_{j}\int_{z_j}^{z_{j+1}}d\alpha_j=-\sum\limits_{j}c_j=-I(f_1,0)$.
+    \end{proof}
+    \begin{remark}[推广 (12.12)]
+        对于一般的变换（不从流诱导过来）$f$，同样有 $I(f,\hat{z})+2\pi i\ri(f,\hat{z})=0$.
+    \end{remark}
+
+    \begin{thebibliography}{}
+        \bibitem{buff}
+        X. Buff [2003], \emph{Virtually Repelling Fixed Points}, Publ. Mat. \textbf{47}, 195--209.
+    \end{thebibliography}
+
+\end{document}
