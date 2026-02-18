@@ -1,0 +1,94 @@
+\documentclass[11pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, graphicx, float, subfigure, geometry, setspace, xfrac, unicode-math, tikz-cd, enumerate}
+\usepackage[bookmarks=true, colorlinks, citecolor=blue, linkcolor=black]{hyperref}
+\ctexset{
+    section = {
+        format = {\Large\bfseries},
+    }
+}
+\setmathfont{LatinModernMath-Regular}
+\setmathfont[range=\mathbb]{TeXGyrePagellaMath-Regular}
+
+% 导言区
+
+\title{单复变动力系统笔记 13. 多数周期轨道排斥}
+\author{zero-point\_}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{conjecture}[theorem]{猜想}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{note}[theorem]{自注}
+\newtheorem{property}[theorem]{性质}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{remark}[theorem]{注}
+\newtheorem{remind}[theorem]{提醒}
+\setlength{\parindent}{10ex}
+\pagestyle{plain}
+\geometry{left=2.54cm, right=2.54cm, top=3.18cm, bottom=3.18cm}
+\setstretch{1.5}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\ri}{\mathrm{résit}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\partials}[2]{\frac{\partial{#1}}{\partial{#2}}}
+
+\begin{document}
+	\maketitle
+
+    本章介绍 Fatou 关于周期点的著名定理：非排斥的周期点只有有限个.
+
+    \section{Fatou 周期点数定理}
+    \begin{remind}\label{提醒13.1}
+        在教材推论~10.16 中，使用临界点标记法，可以证明非线性有理函数 $f$ 至多有 $2\deg(f)-2$ 个吸引或抛物的周期轨道.
+    \end{remind}
+
+    \begin{lemma}[中性轨道数 (13.2)]\label{引理13.2}
+        设 $f:\hat{\C}\to\hat{\C}$ 是有理函数且 $d=\deg(f)\geq 2$，则 $f$ 满足乘子 $\lambda\neq 1$ 的中性周期轨道数不大于 $4d-4$.
+    \end{lemma}
+    \begin{proof}
+        我们的目的是扰动 $f$，使得至少一半的中性周期轨道变成吸引的.
+
+        设 $f(z)=\frac{p(z)}{q(z)}$，其中 $p,q$ 互素且至少一个次数是 $d$，考虑扰动 $f_t(z)=\frac{p(z)-tz^d}{q(z)-t}$，这里为了避免全局 $\frac{0}{0}$ 的良定义问题，首先考虑 $f(z)=z^d$ 的情形，这时它没有中性周期轨道. 于是不妨设 $f(z)\neq z^d$ 并重新考虑扰动，则除去 $t\in \{q(z)\mid p(z)-q(z)z^d=0\}$（有限个点）外，所有剩下的 $t$，$f_t$ 在 $\hat{\C}$ 上良定义.
+
+        设 $f=f_0$ 有至少 $k$ 个乘子非 $1$ 的中性周期轨道（轨道可以有无限多个，我们挑 $k$ 个出来），对于每个轨道（选代表元 $z_j$，$j$ 也是该轨道的标号），设周期是 $T$，则对 $G(z,t)=f_t^{\circ T}(z)-z$ 在轨道上的每个点 $(z,0)$ 附近使用隐函数定理，则对于足够小的 $f_t$，该轨道仍然对应地保留，且乘子 $\lambda_j(t)$ 是关于 $t$ 的全纯函数.
+
+        接下来证明 $t\mapsto \lambda_j(t)$ 在 $0$ 附近一定不是常数. 反证法，考虑射线 $t\in \{re^{i\theta}\mid 0\leq r\leq +\infty\}$ 且不经过之前排除掉的 $t$（不满足这一条件的 $\theta$ 只有有限个），我们证明 $t\mapsto z_j(t)$ 可以在这一射线的小邻域上全纯开拓：考虑 $[0,\infty]$ 的子集 $S$，使得 $\forall\; r_1\in S$，$z_j(t)$ 在 $t\in [0,r_1]$ 上可以全纯开拓. $S$ 是闭集：任取递增列 $r_n\to r$，由于 $\hat{\C}$ 紧，则 $\{z_j(r_n)\}$ 有聚点 $z^*$，由于 $f_t$ 对两个分量都全纯，则取子列后取极限即知 $f_r^{\circ p_j}(z^*)=z^*$，其中 $p_j$ 是 $[0,r_n]$ 上的 $z_j$ 周期. 类似的可以证明 $z^*$ 的乘子也是 $r_n$（取过子列后的）的极限，于是也是常数，从而 $r\in S$. $S$ 由隐函数定理，显然也是开集. 于是由连通性 $S=[0,\infty]$，从而我们给 $f_{\infty}(z)=z^d$ 逼近出了一个中性轨道，矛盾.
+
+        接下来我们可以展开 $\lambda_j(t)=\lambda_j(0)(1+a_j t^{n_j}+o(t^{n_j}))$，其中 $a_j\neq 0$. 于是 $\abs{\lambda_j(t)}=1+\re(a_j t^{n_j})+o(t^{n_j})$（注意，我们在 $1$ 附近展开）. 设 $\sigma_j=\sgn(\re(a_j e^{i\theta n_j}))$，于是对给定的 $\theta$，$\sigma_j(\theta)=1$ 时对充分小的 $r$，$\abs{\lambda_j(re^{i\theta})}>1$；$=-1$ 类似；且 $\int_{0}^{2\pi}\sigma_j(\theta)d\theta=0$.
+
+        最后，设 $l=\begin{cases}
+            k,&2\nmid k,\\
+            k-1,&2\mid k.\\
+        \end{cases}$ 则 $\sigma(\theta)=\sum\limits_{i=1}^{l}\sigma_i(\theta)$ 均值为 $0$ 但几乎处处值为奇整数，因此我们可以找到 $\theta$，使得过半的 $j\leq l$ 满足 $\sigma_j(\theta)=-1$，由于 $\theta$ 固定，于是可以取足够小的 $r$，则 $t=re^{i\theta}$ 满足 $f_t$ 至少有 $\frac{l+1}{2}$ 个吸引周期轨道，于是 $\frac{l+1}{2}\leq 2d-2$（考虑提醒~\ref{提醒13.1}），从而 $k\leq l+1\leq 4d-4$. 也就是说，任取 $k$ 个互不相同的中性周期轨道，必有 $k\leq 4d-4$，从而中性周期轨道数有限且不大于 $4d-4$.
+    \end{proof}
+
+    \begin{theorem}[Fatou (13.1)]
+        设 $f:\hat{\C}\to\hat{\C}$ 是有理函数且 $d=\deg(f)\geq 2$，则 $f$ 至多只有有限个周期轨道是吸引或中性的.
+    \end{theorem}
+    \begin{proof}
+        使用提醒~\ref{提醒13.1} 和引理~\ref{引理13.2} 即证数量上限是 $6d-6$.
+    \end{proof}
+    \begin{remark}
+        Shishikura~\cite{Shishikura} 使用拟共形映射给出了精确上界 $2d-2$.
+    \end{remark}
+    
+    \begin{thebibliography}{}
+        \bibitem{Shishikura}
+        M. Shishikura [1987], \emph{On the quasiconformal surgery of rational functions}, Ann. Sci. École Norm. Sup. Paris \textbf{20}, 1--29.
+    \end{thebibliography}
+
+\end{document}
