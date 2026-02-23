@@ -1,0 +1,176 @@
+\documentclass[11pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, graphicx, float, subfigure, geometry, setspace, xfrac, unicode-math, tikz-cd, enumerate}
+\usepackage[bookmarks=true, colorlinks, citecolor=blue, linkcolor=black]{hyperref}
+\ctexset{
+    section = {
+        format = {\Large\bfseries},
+    }
+}
+\setmathfont{LatinModernMath-Regular}
+\setmathfont[range=\mathbb]{TeXGyrePagellaMath-Regular}
+
+% 导言区
+
+\title{单复变动力系统笔记 14. 排斥周期轨道稠密}
+\author{zero-point\_}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{conjecture}[theorem]{猜想}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{note}[theorem]{自注}
+\newtheorem{property}[theorem]{性质}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{remark}[theorem]{注}
+\newtheorem{remind}[theorem]{提醒}
+\setlength{\parindent}{10ex}
+\pagestyle{plain}
+\geometry{left=2.54cm, right=2.54cm, top=3.18cm, bottom=3.18cm}
+\setstretch{1.5}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\ri}{\mathrm{résit}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\partials}[2]{\frac{\partial{#1}}{\partial{#2}}}
+
+\begin{document}
+	\maketitle
+
+    本章介绍另一个定理的证明：排斥周期轨道在 Julia 集中稠密.
+
+    \section{预备知识}
+    \begin{itemize}
+        \item 有理函数不动点分类（笔记~12 推论~2.16；教材推论~12.7）
+        \item 原像集在 $J(f)$ 中稠密（教材推论~4.13）
+        \item Kœnigs 线性化定理（教材定理~8.2）
+        \item Pick 定理（教材定理~2.11）
+        \item 压缩映射定理
+        \item Julia 集无孤立点（教材推论~4.14）
+        \item 反函数定理
+        \item 双曲面与正规族（教材定理~3.2）
+        \item Fatou 周期点数定理（笔记~13 定理~1.3；教材定理~13.1）
+        \item Julia 集不变性（教材引理~4.3）
+        \item Julida 集传递性（教材定理~4.10）
+        \item 教材引理~8.5 的证明过程
+        \item Koebe 偏差定理（教材~\cite{Carleson} 定理~1.6，或教材~\cite{Carleson} 定理~1.10 的推广）
+        \item 全局线性化定理（教材推论~8.4）
+        \item 临界点引理（教材引理~8.5）
+        \item 教材定理~10.15
+    \end{itemize}
+
+    \section{排斥轨道稠密}
+    \begin{definition}[同宿轨道]
+        设轨道 $\cdots\mapsto z_2\mapsto z_1\mapsto z_0$，若 $\lim\limits_{j\to\infty}z_j$ 存在且为 $z_0$，则称轨道为同宿轨道.
+    \end{definition}
+
+    \begin{theorem}[排斥轨道稠密 (14.1)]\label{定理14.1}
+        设有理函数 $f:\hat{\C}\to\hat{\C}$ 有 $\deg(f)\geq 2$，则 $J(f)$ 等于排斥周期点集的闭包.
+    \end{theorem}
+    \begin{proof}[证明 (Julia)]
+        由教材推论~12.7 知 $f$ 有一个不动点 $z_0\in J(f)$，该不动点要么排斥，要么乘子为 $1$. 任取开集 $U\subset \hat{\C}$ 且 $U\cap J(f)\neq \emptyset$，我们的目的是证明 $U$ 中有排斥周期轨道. 由教材推论~4.13 知存在 $r>0,\;z_r\in J(f)\cap U$ 使得 $f^{\circ r}(z_r)=z_0$；又任取 $z_0$ 的邻域 $N$，则同样存在 $q>r,\; z_q\in N\cap J(f)$ 使得 $f^{\circ (q-r)}(z_q)=z_r$.
+
+        接下来我们构造同宿轨道. 首先设 $z_0$ 是排斥不动点，则取 $N$ 为可被 Kœnigs 线性化的那个局部邻域，则通过考虑共轭后线性函数的原像知 $\lim\limits_{j\to\infty}z_j=z_0$.
+        
+        若 $\{z_j\}$ 不含 $f$ 的临界点，则 $z_q$ 的充分小圆盘邻域 $V_q\subset N$ 可以被 $f^{\circ q}$ 微分同胚地映到 $z_0$ 的邻域 $V_0$；由于 $V_q$ 足够小，不妨设 $V_r=f^{\circ (q-r)}(V_q)\subset U$. 由于 $N$ 上 $f$ 可逆，于是对每个 $j$ 我们都能得到 $z_j$ 的邻域 $V_j=f^{\circ(q-j)}(V_q)$，且 $V_j$ 收敛到 $z_0$（也就是说，每个 $V_j$ 任取一点组成点列，点列会收敛到 $z_0$），于是对每个充分大的 $p$，必有 $\overline{V}_p\subset V_0$，于是 $f^{\circ(-p)}$ 将单连通开集 $V_0$ 全纯映为 $V_p$ 且 $\overline{V}_p\subset V_0$，于是由 Pick 定理知 $d(f^{\circ(-p)}(u),f^{\circ(-p)}(v))<Cd(u,v)$，这里$0<C<1$，且 $d$ 是双曲度量，于是在双曲度量意义下使用压缩映射定理，则 $\exists\; z'\in V_p$ 是 $f^{\circ(-p)}$ 的吸引不动点，从而是 $f$ 的周期为 $p$ 的排斥点，且 $f^{\circ (p-r)}(z')\in U$.
+
+        若 $\{z_j\}$ 含 $f$ 的临界点，则我们仍可以选择 $V_q$ 使得 $f^{\circ q}:V_q\to V_0$ 是分支覆叠映射，只在 $z_q$ 处分支；对 $f^{\circ p}:V_p\to V_0$ 同理. 对分支覆叠映射，我们选择一条缝 $S$ 从 $\partial V_0$ 连到 $z_0$ 且不经过 $\overline{V}_p$，再取 $V_p$ 的一部分共形映到 $V_0\setminus S$，于是仍然可以完成证明.
+
+        最后考虑 $z_0$ 是乘子为 $1$ 的抛物点，则取 $N$ 是排斥花瓣，之后同理.
+    \end{proof}
+    \begin{proof}[证明 (Fatou)]
+        我们直接分析正规性来解决问题.
+
+        由于 $J(f)$ 没有孤立点，因此只需验证 $J(f)$ 至多只有有限个点不能直接被排斥周期点逼近. 任取 $z_0\in J(f)$ 不是不动点或临界点的像（由代数基本定理，我们只排除了有限个点），则 $z_0$ 有 $d$ 个互不相同且不为 $z_0$ 的原像 $z_1,\ldots,z_d$，于是由反函数定理，$f^{-1}$ 在 $z_0$ 的小邻域 $N$ 上有 $d$ 个全纯分支 $\varphi_1,\ldots,\varphi_j$，满足 $\varphi_j(z_0)=z_j$. 取 $N$ 足够小则可以让 $\varphi_j$ 值域两两不交且与 $N$ 不交.
+
+        假设 $\forall\; n>0,\;\forall\; z\in N$，都有 $f^{\circ n}(z)\neq z,\; f^{\circ n}(z)\neq\varphi_1(z),\; f^{\circ n}(z)\neq\varphi_2(z)$，则交比 $g_n(z)=\frac{(f^{\circ n}(z)-\varphi_1(z))(z-\varphi_2(z))}{(f^{\circ n}(z)-\varphi_2(z))(z-\varphi_1(z))}$ 满足 $g_n(N)\subset \C\setminus\{0,1\}$，从而由双曲面的正规族定理，$\{g_n\}$ 是正规族. 由于 $f^{\circ n}(z)=\frac{\varphi_2(z)(z-\varphi_1(z))g_n(z)-\varphi_1(z)(z-\varphi_2(z))}{(z-\varphi_1(z))g_n(z)-(z-\varphi_2(z))}$（由于值域不交而良定义），则通过正规族的定义（取子列；提示：设 $\Phi(z,w)=\frac{\varphi_2(z)(z-\varphi_1(z))w-\varphi_1(z)(z-\varphi_2(z))}{(z-\varphi_1(z))w-(z-\varphi_2(z))}$，这是一个 Möbius 变换；由于 $N$ 足够小，不妨设 $N\subset\subset N'$ 且 $N'$ 满足上述一切性质，于是 $\overline{N}\times\hat{\C}$ 作为 $\Phi$ 的定义域紧，从而 $\Phi$ 一致连续）知 $\{f^{\circ n}\}$ 正规，但 $z_0\in N\cap J(f)$，矛盾.
+
+        于是存在 $n>0$ 以及 $z\in N$ 使得 $f^{\circ n}(z)=z$ 或者 $f^{\circ n}(z)=\varphi_i(z),\; i=1,2$，从而 $z$ 是周期为 $n$ 或 $n+1$ 的周期点，于是 $z_0$ 可以被周期点逼近. 最后使用 Fatou 关于周期点数的定理~13.1，则由于非排斥的周期点只有有限个，去掉它们后 $z_0$ 可以被排斥周期点逼近，得证.
+    \end{proof}
+
+    \begin{corollary}[$J$ 的开子集轨道覆盖 $J$ (14.2)]\label{推论14.2}
+        若 $U$ 是 $J$ 诱导拓扑下的开集，则对于充分大的 $n$，$f^{\circ n}(U)=J$.
+    \end{corollary}
+    \begin{proof}
+        $\subset$ 由 $J$ 的不变性知（见）. $\supset$ 方向则设 $U=J\cap \tilde{U}$，其中 $\tilde{U}$ 是球面上的开集，由定理~\ref{定理14.1} 知 $U$ 中有排斥周期点 $z_0\in J$（设周期为 $p$，另设 $g=f^{\circ p}$），则取 $z_0$ 的小邻域 $V\subset\tilde{U}$，使得 $V\subset g(V)$，则 $V\subset g(V)\subset g^{\circ 2}(V)\subset\cdots$，而由 Julia 集的传递性知 $J\subset \bigcup\limits_{n=0}^{\infty}g^{\circ n}(V)$，而由于 $J$ 紧，$g$ 是开映射（参考开映照定理），则对充分大的 $n$ 必有 $J\subset g^{\circ n}(V)\subset g^{\circ n}(\tilde{U})$，从而 $J=g^{\circ n}(U)$，最后使用 Julia 集的不变性即证.
+    \end{proof}
+    \begin{remark}
+        设紧集 $K\subset\hat{\C}$，且要求 $K$ 不包含大轨道有限点（在一些资料中叫例外点，见教材引理~4.9），则上述 $\tilde{U}$ 存在 $n>0$ 满足 $f^{\circ n}(U)\supset K$.
+    \end{remark}
+    \begin{note}
+        再考虑到教材引理~4.14，我们可以以此得到 $z\in F$ 的判据：任取 $z'\in \hat{\C}$ 除掉例外点，则 $z\in F\Leftrightarrow$ $z$ 是 $z'$ 前驱点集的聚点（参考~\cite{Brolin} 的定理~2.5）.
+    \end{note}
+
+    \begin{corollary}[Julia 集的不良性质 (14.3)]
+        若开集 $U$ 满足 $U\cap J(f)\neq\emptyset$，则 $\{f^{\circ n}\}$ 没有子列能在 $U$ 上内闭一致收敛.
+    \end{corollary}
+    \begin{proof}
+        反证法，设 $f^{\circ n_i}(z)$ 内闭一致收敛到 $g$，设 $z_0\in U\cap J$，则由连续性，$\forall\; \varepsilon>0$，存在 $z_0$ 邻域 $U'$，使得 $\forall\; z\in U',\; \abs{g(z)-g(z_0)}<\varepsilon$，再考虑逼近，则 $\exists\; N>0,\; \forall\; i>N,\; \abs{f^{\circ n_i}(z)-g(z_0)}<2\varepsilon$，也就是说 $f^{\circ n_i}(U')$ 的半径不大于 $2\varepsilon$，令 $\varepsilon\to 0$ 并考虑推论~\ref{推论14.2} 即证.
+    \end{proof}
+
+    \begin{definition}[临界轨道]
+        临界轨道指临界点的正向轨道（不含自身）.
+    \end{definition}
+    \begin{note}
+        临界轨道之并就是后临界集.
+    \end{note}
+
+    \begin{corollary}[无理中性不动点与临界点 \uppercase\expandafter{\romannumeral2} (14.4)]\label{推论14.4}
+        若 $z_0$ 是 Cremer 点或 Siegel 圆盘的边界点（对周期点亦然），则 $z_0$ 的每个邻域都包含无穷多个临界轨道点.
+    \end{corollary}
+    \begin{proof}
+        首先考虑 Cremer 点情形，不妨设 $z_0=f(0)=0$. $f$ 在 $0$ 的局部共形，则 $\forall\; n>0$，存在小圆盘 $\D_{\varepsilon_n}$，使得 $f^{\circ(-n)}$ 有一个单值分支且 $0\mapsto 0$. 这里我们把 $\varepsilon_n$ 取到最大，则与教材引理~8.5 证明类似的，$\partial f^{-n}(\D_{\varepsilon_n})$ 有 $f^{\circ n}$ 的临界点，于是只需证 $\lim\limits_{n\to\infty}\varepsilon_n=0$. 反证法，设 $\varepsilon'=\varliminf\limits_{n\to\infty}\varepsilon_n>0$，则 $\forall\; \varepsilon<\min\{1,\varepsilon'\}$，在 $\D_{\varepsilon}$ 上，由 Koebe 偏差定理，可以推知 $\D_{\varepsilon}$ 上的单叶全纯且 $0\mapsto 0$ 且 $\abs{g'(0)}=1$ 的函数族正规，于是 $f^{\circ(-n)}$ 可取子列 $f^{\circ(-n_i)}$ 收敛到某 $g:\D_{\varepsilon}\stackrel{\simeq}{\to}U$（$g$ 显然单叶，这里给出了记号 $U$ 的定义） 且 $g(0)=0$. 考虑 $U'=g(\D_{\frac{\varepsilon}{2}})$，则同样由 Koebe 偏差定理并注意到 $U'\subset g(\overline{\D_{\frac{\varepsilon}{2}}})$ 被包含在紧集中，则 $U'$ 上 $f^{\circ n_i}\rightrightarrows g^{-1}$，于是对充分大的 $n_i$ 有 $f^{\circ n_i}(U')\subset\D_{\varepsilon}$. 但是既然 $z_0$ 作为 Cremer 点落在 $J$ 内，则由推论~\ref{推论14.2} 知 $f^{\circ n_i}(U')$ 对充分大的 $n_i$ 要覆盖 $J$，从而半径不能无限小，矛盾.
+
+        若 $z_0$ 是 Siegel 圆盘的边界点，则上述证明过程中唯一的阻碍是选出合法的 $f^{\circ (-n)}$ 分支. 设 $\Delta$ 是 Siegel 圆盘，它是 $f$-不变的，于是由反证法设 $\D_{\varepsilon}$ 是不含临界轨道的 $z_0$ 的圆盘，由于 $f^{\circ n}$ 在 $\D_{\varepsilon}$ 上单叶，则存在唯一的全纯分支 $f^{\circ (-n)}$ 使得 $f^{\circ(-n)}(\D_{\varepsilon}\cap \Delta)=\Delta$.
+    \end{proof}
+    \begin{remark}
+        这一推论相对于笔记~11 定理~5.13（教材定理~11.17）进行了强化，排除了 $z_0$ 本身是临界轨道点而 $z_0$ 小去心邻域没有临界轨道点的可能性.
+    \end{remark}
+
+    \begin{definition}[后临界有限]
+        有理映射 $f$ 是后临界有限的，如果每个临界轨道都有限.
+    \end{definition}
+    \begin{corollary}[后临界有限映射的不动点 (14.5)]
+        若 $f$ 后临界有限，则 $f$ 的周期点要么排斥，要么超吸引. 一般的，若 $f$ 的每个临界轨道要么有限，要么收敛到一个吸引周期轨道，则 $f$ 的周期点要么排斥要么吸引.
+    \end{corollary}
+    \begin{proof}
+        由教材推论~8.4 和教材引理~8.5 知若存在吸引域，则不可能后临界有限；由教材定理~10.15 知抛物轨道的吸引花瓣也有临界点，且由局部 Fatou 坐标知其不可能满足第二个命题的条件；由推论~14.4 知若有 Cremer 轨道或 Siegel 轨道，则也不可能满足第二个命题的条件（因为这时后临界集有限，但是轨道小邻域内就有无穷多个临界轨道点）.
+    \end{proof}
+
+    \begin{corollary}[$J$ 的拓扑性质 (14.6)]
+        若 $J$ 不连通，则它含有不可数无穷多个连通支.
+    \end{corollary}
+    \begin{proof}
+        不妨设 $J=J_0\cup J_1$，其中 $J_0,J_1$ 都是若干连通支的并，且二者非空且不交. 由推论~\ref{推论14.2}，设 $g=f^{\circ n}$ 满足 $g(J_0)=g(J_1)=J$，则对于每个点 $z\in J$，我们可以唯一指定一个 $01$ 符号序列 $\varepsilon(z)={\{\varepsilon_i(z)\}}_{i\geq 0}$，这里 $\varepsilon_i(z)=j$ 表示 $g^{\circ k}(z)\in J_j$.
+
+        接下来我们证明，设 $z,z'$ 序列分别为 $\varepsilon\neq \varepsilon'$，则 $z,z'$ 分属两个不同的连通支. 设在第 $n$ 位不同，则反证法，由于连续映射 $g^{\circ n}$ 将连通集映为连通集，则直接导出矛盾，因为 $J_0,J_1$ 由假设知不是同一个连通集的子集.
+    \end{proof}
+    \begin{remark}
+        这简化了教材推论~4.15 的证明.
+    \end{remark}
+
+    \begin{remark}[任意的 Riemann 曲面]
+        Julia 集是排斥周期点集的闭包，这一事实对任意 Riemann 曲面上的任意全纯函数都成立，除了一个极其特殊的反例：$\hat{\C}$ 上的只有一个抛物不动点（只有一个不动点，且该不动点是抛物的）的分式线性变换.
+    \end{remark}
+
+    \begin{thebibliography}{}
+        \bibitem{Brolin}
+        H. Brolin [1965], \emph{Invariant sets under iteration of rational functions}, Ark. Mat \textbf{6}, 103--144.
+        
+        \bibitem{Carleson}
+        L. Carleson, T. W. Gamelin [1993], \emph{Complex Dynamics}, Springer-Verlag, New York.
+    \end{thebibliography}
+
+\end{document}
