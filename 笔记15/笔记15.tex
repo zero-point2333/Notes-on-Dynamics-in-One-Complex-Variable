@@ -1,0 +1,169 @@
+\documentclass[11pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, graphicx, float, subfigure, geometry, setspace, xfrac, unicode-math, tikz-cd, enumerate}
+\usepackage[bookmarks=true, colorlinks, citecolor=blue, linkcolor=black]{hyperref}
+\ctexset{
+    section = {
+        format = {\Large\bfseries},
+    }
+}
+\setmathfont{LatinModernMath-Regular}
+\setmathfont[range=\mathbb]{TeXGyrePagellaMath-Regular}
+
+% 导言区
+
+\title{单复变动力系统笔记 15. Herman 环}
+\author{zero-point\_}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{conjecture}[theorem]{猜想}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{note}[theorem]{自注}
+\newtheorem{property}[theorem]{性质}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{remark}[theorem]{注}
+\newtheorem{remind}[theorem]{提醒}
+\setlength{\parindent}{10ex}
+\pagestyle{plain}
+\geometry{left=2.54cm, right=2.54cm, top=3.18cm, bottom=3.18cm}
+\setstretch{1.5}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\Rot}{\mathrm{Rot}}
+\newcommand{\rot}{\mathrm{rot}}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\partials}[2]{\frac{\partial{#1}}{\partial{#2}}}
+
+\begin{document}
+	\maketitle
+
+    接下来几章讲 Fatou 集的结构与分类. 本章介绍与 Siegel 圆盘类似的一个 Fatou 分支对象：Herman 环.
+
+    \section{预备知识}
+    \begin{itemize}
+        \item 圆上的保向同胚（参考~\cite[第 11 章]{KH95}）
+        \item Diophantine 数（教材第 129 页）
+        \item 双曲 Riemann 面及其动力学（教材引理~2.5、Pick 定理~2.11、问题~2-m、引理~5.6）
+        \item $\hat{\C}$ 上的动力学（教材第 4 章，如推论~4.12 等）
+        \item 平面拓扑（如教材习题~5-b）
+        \item 多项式 Fatou 集（教材引理~9.4）
+        \item 无理中性不动点（教材引理~11.1、定理~11.17）
+    \end{itemize}
+
+    \section{Herman 环的构造}
+    \begin{definition}[Herman 环]
+        设 $U$ 是 Fatou 集的分支，$U$ 被称为 Herman 环，若 $U$ 共形等价于一个圆环 $\cA_r=\{z|1<\abs{z}<r\}$，且 $f$（或者某个迭代 $f^{\circ n}$）在 $U$ 上的行为对应了（也就是解析共轭于）$\cA_r$ 上的无理旋转. 
+    \end{definition}
+    有两种方法构造 Herman 环，一种是 Herman 自己提出的，另一种是 Shishikura 用拟共形手术法拼出来的. 我们介绍前一种. 首先我们引用一些圆上保向同胚的结论.
+
+    \begin{definition}[旋转数]
+        设 $F:\R\to \R$ 是同胚，且满足 $F(t+1)=F(t)+1$，则定义 $F$ 的旋转数 $\Rot(F)=\lim\limits_{n\to\infty}\frac{F^{\circ n}(t_0)}{n}$，其中 $t_0$ 任取，计算结果与 $t_0$ 的选取无关. 考虑 $f:\R/\Z\to \R/\Z$ 由 $F$ 通过投影 $\pi:\R\to \R/\Z$ 诱导而来（称 $F$ 是 $f$ 的提升），则定义 $\R/\Z\ni\rot(f)\equiv \Rot(f)\mod 1$.
+    \end{definition}
+    \begin{remark}
+        这一旋转数的定义与~\cite[定义 11.1.2]{KH95} 相合.
+    \end{remark}
+
+    接下来我们介绍一些旋转数的基本性质，但是它们不会在 Herman 环构造中使用.
+    \begin{lemma}[有理旋转数 (15.1)]
+        同胚 $f:\R/\Z\to \R/\Z$ 有 $q$-周期点当且仅当其旋转数是有理数且分母为 $q$. （证明参考~\cite[命题 11.1.4]{KH95}）
+    \end{lemma}
+
+    \begin{lemma}[Denjoy (15.2)]
+        $C^2$ 微分同胚 $f:\R/\Z\to \R/\Z$ 若满足 $\rot(f)\notin\Q$，则 $f$ 与无理旋转 $R_{\rot(f)}t\mapsto t+\rot(f)$ 拓扑共轭. （证明参考~\cite[定理 12.1.1]{KH95}）
+    \end{lemma}
+
+    \begin{lemma}[扰动稳定性 (15.3)]
+        考虑单参数族 $F_{\alpha}(t)=F_0(t)+\alpha$，其中 $F_0\in C^1(\R)$，则 $\Rot(F_{\alpha})$ 关于 $\alpha$ 连续且单调不减；$\Rot(F_{\alpha+1})=\Rot(F_{\alpha})+1$. 定义区间 $I_{\Rot(F_{\alpha})}$ 是满足以下性质的极大区间：$\alpha\in I_{\Rot(F_{\alpha})}$，且 $\Rot(F_{\alpha'})=\Rot(F_{\alpha})$ 对任意 $\alpha'\in I_{\Rot(F_{\alpha})}$ 成立. 若 $F_0$ 非线性，则对于任意 $\alpha$，若 $\Rot(F_{\alpha})$ 是有理数，则 $\{\alpha\}\subsetneq I_{\Rot(F_{\alpha})}$.
+    \end{lemma}
+    \begin{proof}
+        唯一不直接由~\cite[第 11 章]{KH95} 推知的就是最后一个结论. 为此，我们先证明一个断言：对任意有理数 $\frac{p}{q}$，$I_{\frac{p}{q}}$ 是单点集 $\{a_0\}$ 当且仅当 $F_{a_0}^{\circ q}(x)-x-p\equiv 0$.
+        
+        $\Rightarrow$ 方向：反证法，设 $x\in [0,1]$ 满足 $F_{a_0}^{\circ q}(x)-x-p>0$，则对充分接近的 $a<a_0$（不妨设 $a\in (a',a_0)$），亦有 $F_{a}^{\circ q}(x)-x-p>0$. 由 $F_{a}^{\circ q}$ 严格单调性（因为由保向同胚提升）知，$F_{a}^{\circ 2q}(x)>F_{a}^{\circ q}(x+p)=F_{a}^{\circ q}(x)+p>x+2p$，于是归纳可知 $F_a^{\circ kq}(x)>x+kp$，于是 $\Rot(F_a)\geq \frac{p}{q}$ 由定义即知. 但同时，因为 $F_a\prec F_{a_0}$（使用~\cite[定义 11.1.7]{KH95} 的记号），则 $\Rot(F_a)\leq \Rot(F_{a_0})=\frac{p}{q}$，于是 $I_{\frac{p}{q}}\supset (a',a_0)$ 不是单点集，矛盾.
+
+        $\Leftarrow$ 方向：考虑任意 $a>a_0$，则由 $F_{a}^{\circ q}$ 严格单调性，$F_a^{\circ q}(x)-x-p>F_{a_0}^{\circ q}(x)-x-p=0$ 对任意 $x\in\R$ 成立. 先考虑 $x\in [0,1]$ 紧，则 $\exists\ \delta>0$ 使得 $F_a^{\circ q}(x)\geq x+p+\delta$，由提升的性质，这一性质对所有 $x\in\R$ 成立，则 $\Rot(F_a)=\frac{\Rot(F_a^{\circ q})}{q}\geq \frac{p+\delta}{q}>\frac{p}{q}$，于是 $I_{\frac{p}{q}}\cap (a_0,+\infty)=\emptyset$. 对于 $a<a_0$ 情况完全同理，于是得证.
+
+        我们的目的是使用~\cite[命题 11.1.11]{KH95}，于是反证法，假设不存在 $S\subset\Q$ 满足命题条件，我们希望推出矛盾. 这意味着存在 $(c,d)\subset \R$ 使得 $\forall\ \alpha=\frac{p}{q}\in (c,d)\cap \Q$，存在 $t\in \R$ 使得 $F_t$ 与旋转 $R_{\alpha}:x\mapsto x+\alpha$ 拓扑共轭. 这时容易推知 $F_t^{\circ q}(x)\equiv x+p$. 等式两边求导再取对数，注意到 $F_{t}'(x)=F_0'(x)$，则设 $\varphi(x)=\ln F_{0}'(x)$，则 $\sum\limits_{n=1}^{q-1}\varphi(F_{t}^{\circ n}(x))=0$. 接下来，取 $r\in (c,d)\setminus\Q$，并取 $\frac{p_n}{q_n}\to r$ 且 $\frac{p_n}{q_n}\in (c,d)\cap \Q$. 于是 $\sum\limits_{n=1}^{q_n-1}\varphi(F_{t_{\frac{p_n}{q_n}}}^{\circ n}(x))=0$，其中 $F_{t_{\frac{p_n}{q_n}}}$ 与 $R_{\frac{p_n}{q_n}}$ 拓扑共轭. 等式两边取 $n\to\infty$，则由 $F_r$ 的唯一遍历性（\cite[定理 11.2.9]{KH95}）与 Birkhoff 遍历定理得到 $\int_{S^1}\varphi(u)d\mu_{r}(u)=0$，其中 $\mu_r$ 是 $F_r$ 的唯一遍历测度. 显然 $\int_{S^1}F_0'(x)d\mu_r(x)=F_0(x+1)-F_0(x)=1$，则由 Jensen 不等式知 $\int_{S^1}\varphi(u)d\mu_{r}(u)\leq \ln(\int_{S^1}F_0'(u)d\mu_r(u))=0$，等号成立当且仅当 $F_0'$ 恒为常数. 可是前面已经推出等号的确成立了，因此 $F_0'$ 的确是常数，则 $F_0$ 是线性的，矛盾. 最后直接使用~\cite[命题 11.1.11]{KH95} 即证.
+    \end{proof}
+
+    接下来的定理证明很长而且与主线无关，因此只列出结论，但是后续要用到：
+    \begin{theorem}[Herman-Yoccoz (15.4)]\label{15.4}
+        若保向微分同胚 $f:\R/\Z\to \R/\Z$ 实解析（或 $C^{\infty}$），$\rho$ 是 Diophantine 的，则 $f$ 实解析共轭于（或 $C^{\infty}$-共轭于）旋转 $R_{\rho}:x\mapsto x+\rho$.
+    \end{theorem}
+
+    接下来我们考虑圆上的“有理映射”.
+    \begin{definition}[Blaschke 乘积]
+        给定 $a\in\hat{\C}$ 且 $\abs{a}\neq 1$，则存在有理函数 $\beta_a$ 使得 $\beta_a(1)=1$ 且 $\beta_a(\partial \D)=\partial\D$ 且 $\beta_a(a)=0$. 事实上，$\beta_{\infty}(z)=\frac{1}{z}$，$\beta_a(z)=\frac{1-\overline{a}}{1-a}\frac{z-a}{1-\overline{a}z}$ 若 $a\neq\infty$. 进一步的，$\abs{a}<1$ 时 $\beta_a$ 在 $\partial \D$ 上保向且 $\beta_a(\D)=\D$；反之在 $\partial \D$ 上反向且 $\beta_a(\D)=\hat{\C}\setminus \overline{\D}$. 定义 Blaschke 乘积是形如以下表达式的有理函数 $f(z)=e^{2\pi it}\beta_{a_1}(z)\cdots\beta_{a_d}(z)$，其中 $t\in\R$ 且 $a_1,\ldots,a_d\in\hat{C}\setminus \partial\D$，且满足 $a_j\overline{a}_k\neq 1$（最后的条件是为了保证 $\beta_{a_j}(z)\beta_{a_k}(z)\neq 1$，使得乘积形式是轮换意义下唯一的）.
+    \end{definition}
+    \begin{lemma}[有理映射 (15.5)]
+        给定度数为 $d$ 的有理映射 $f$，则 $f(\partial\D)=\partial\D$ 当且仅当 $f(z)=e^{2\pi it}\beta_{a_1}(z)\cdots\beta_{a_d}(z)$ 是一个 Blaschke 乘积.
+    \end{lemma}
+    \begin{proof}
+        $\Leftarrow$ 方向显然；$\Rightarrow$ 方向使用归纳法，$d=0$ 显然成立，假设 $d-1$ 时成立，则 $d$ 时设 $a_d$ 是 $f$ 的零点，则我们只需证明 $1-\overline{a}_d z$ 在 $f$ 的分母. 设 $f^*(z)=\frac{1}{\overline{f(\frac{1}{\overline{z}})}}$（易证明其仍是有理函数），则 $z\in\partial\D$ 上由于 $f(z)\in\partial\D$，则 $f^*(z)=\frac{1}{\overline{f(z)}}=f(z)$，于是由解析函数唯一性定理，$f^*\equiv f$，则 $a_d$ 是 $f^*$ 的零点，也即 $f(\frac{1}{\overline{a}_d})=\infty$，于是 $\frac{1}{\overline{a}_d}$ 是 $f$ 的极点，则 $z-\frac{1}{\overline{a}_d}=-\frac{1}{\overline{a}_d}(1-\overline{a}_d z)$ 在 $f$ 的分母上，于是 $\frac{f(z)}{\beta_{a_d}(z)}$ 的度数为 $d-1$，则由归纳知其为 Blaschke 乘积，则 $f$ 也是 Blaschke 乘积.
+    \end{proof}
+    \begin{lemma}[Blaschke 乘积的 Julia 集 (问题~15-b)]
+        设 $f$ 是 Blaschke 乘积，则 $J(f)=I(J(f))$，其中 $I(z)=\frac{1}{\overline{z}}$ 是共轭反演映射.
+    \end{lemma}
+    \begin{proof}
+        注意到 $I\circ I=\Id$, $f\circ I=I\circ f$，于是先考虑 $\tilde{f}=I\circ f\circ I$，不过由于是 Blaschke 乘积，容易代入验证 $\tilde{f}=f$. 因此，接下来我们只需证明 $J(\tilde{f})=I(J(f))$. 这里我们记 Fatou 集 $F(f)=\hat{C}\setminus J(f)$，于是由于 $I$ 是双射，我们只需证明 $F(\tilde{f})=I(F(f))$. $\forall\ z\in F(f)$，任取单调递增数列 $\{a_n\}$，则 $\{f^{\circ a_n}\}$ 在 $z$ 的一个紧邻域 $K$ 内一致收敛到 $f_0$，于是 $\tilde{f}^{\circ a_n}=I\circ f^{\circ a_n}\circ I\rightrightarrows I\circ f_0\circ I$ 在 $I^{-1}(z)=I(z)$ 的紧邻域 $I(K)$ 内成立，于是 $z\in F(\tilde{f})$，从而 $F(\tilde{f})\supset I(F(f))$. $\subset$ 关系显然同理.
+    \end{proof}
+    \begin{remark}\label{注2.11}
+        由于 $J(f)$ 是无限集，因此这一引理说明 $J(f)\cap \D$ 与 $J(f)\cap (\hat{C}\setminus \overline{\D})$ 都非空.
+    \end{remark}
+
+    接下来，我们使用零点不全在 $\D$ 内的 Blaschke 乘积 $f$ 构造 Herman 环：
+    \begin{theorem}[Herman 环构造 (15.6)]
+        设 $d=2n+1\geq 3$ 是奇数，则我们可以构造度数为 $d$ 的 Blaschke 乘积 $f$，使得 $f|_{\partial\D}$ 是保向微分同胚，旋转数为 $\rho$. 若 $\rho$ 是 Diophantine 的，则 $f$ 有 Herman 环.
+    \end{theorem}
+    \begin{proof}
+        首先取 $a_1,\ldots,a_{n+1}$ 足够接近 $0$，再取 $a_{n+2},\ldots,a_d$ 足够接近 $\infty$，则当 $z\in\partial\D$ 时，对前者 $\beta_{a_i}(z)\approx z$，对后者 $\beta_{a_i}(z)\approx\frac{1}{z}$，于是 $\beta_{a_1}(z)\cdots\beta_{a_d}(z)\approx z$，从而在 $\partial\D$ 上是保向实解析微分同胚. 最后调整辐角 $e^{2\pi it}$，使得 $f|_{\partial\D}$ 的旋转数 $\rho$ 是 Diophantine 的. 于是由定理~\ref{15.4} 知 $f|_{\partial\D}$ 实解析共轭于 $R_{\rho}:z\mapsto e^{2\pi i\rho}z$.
+        
+        首先证明 $\partial\D\in\hat{\C}\setminus J(f)$：设实解析共轭 $h$ 满足 $h\circ f=R_{\rho}\circ h$ 在 $\partial\D$ 上成立，则 $h$ 在 $\partial\D$ 上各点都有一个收敛的幂级数，于是各点画出收敛圆（也即在这一开圆盘内，幂级数收敛，且这里由于 $h$ 在 $\partial\D$ 上导数不消失，则我们额外要求幂级数在收敛圆上导数不消失），收敛圆之并组成了紧集 $\partial\D$ 的开覆盖，则有有限子覆盖，且容易验证子覆盖两个收敛圆的交上 $h$ 的两个延拓结果是相容的（解析延拓的圆链法），于是取这一有限子覆盖中收敛圆的并为 $V_0\supset \partial\D$ 是后者的邻域，且 $h$ 在 $V_0$ 上是全纯的，且由于我们对收敛圆的额外要求，$h$ 是单值的，从而 $h$ 是共形同构，且像 $W_0=h(V_0)$ 是包含 $\partial\D$ 的圆环邻域. 由于 $\partial\D$ 上恒有 $h\circ f=R_{\rho}\circ h$，则由全纯函数的唯一性定理，在 $V_0\cap f^{-1}(V_0)$ 上也有 $h\circ f=R_{\rho}\circ h$，因此 $\partial\D\subset V_0\subset \hat{\C}\setminus J(f)$.
+        
+        设 $U$ 是包含 $\partial\D$ 的 Fatou 分支，首先 $J(f)$ 是无限集，因此由教材引理~2.5 知 $U$ 是双曲 Riemann 曲面. 由于 $f$ 将 $\partial\D\subset U$ 映到 $\partial\D$，则 $f|_U:U\to U$. 由教材 Pick 定理~2.11，$f$ 要么是覆盖映射，要么严格收缩 Poincaré 距离 $ds_U$. 我们反证法排除后者：设 $z,w\in \partial\D$ 使得 $D=\max\limits_{z',w'\in\partial\D}d_U(z',w')=d_U(z,w)$（由于 $\partial\D$ 紧而存在）. 由于 $f|_{\partial\D}$ 是双射，设 $u,v\in\partial\D$ 满足 $f(u)=z,f(v)=w$，则 $D\leq c_{\partial\D}d_U(u,v)\leq c_K D<D$，矛盾. 于是 $f$ 是覆盖. 注意到由 Blaschke 乘积性质知 $f^{-1}(\partial\D)=\partial\D$，且 $f$ 在 $\partial\D$ 上是同胚，于是 $f$ 覆盖次数就是 $1$，从而 $f$ 是 $U\to U$ 的共形同构.
+
+        接下来我们的目的是使用教材引理~5.6，因此我们考虑 $\frac{p_n}{q_n}\to\rho$，则由于 $\rho$ 是无理数，不妨令 $q_n\to\infty$ 且单调递增，于是 $R_{\rho}^{\circ q_n}$ 在 $\overline{W}_0$ 上一致收敛于恒等映射，从而 $f^{\circ q_n}$ 在 $V_0$ 内闭一致收敛于恒等映射. 作为正规族的子族，$\{f^{\circ q_n}\}$ 也是正规族，因此通过取子列（不妨设取后还是 $q_n$），有 $f^{\circ q_n}$ 在 $U$ 上内闭一致收敛于映射 $F$，于是由解析函数唯一性定理，$F$ 是恒等映射 $\Id$. 这样由教材引理~5.6，要么存在 $k\in\N$ 使得 $f^{\circ k}=\Id$，要么 $f$ 解析共轭于一个无理旋转，且 $U$ 在共轭下被共形等价地映为单位圆盘、去心圆盘或圆环. 既然 $f|_{\partial \D}$ 实解析共轭于无理旋转，因此不可能存在 $k\in\N$ 满足 $f^{\circ k}=\Id$，于是 $f$ 解析共轭于一个无理旋转.
+
+        最后，我们排除 $U$ 共形等价于单位圆盘或去心圆盘的可能，从而完成了证明. 由注~\ref{注2.11} 知，$\partial\D$ 在 $U$ 中不可缩，因此 $U$ 不可能共形等价于圆盘. 若存在共形同构 $\psi:U\to \D\setminus\{0\}$，则定义 $g=\psi\circ f\circ \psi^{-1}:\D\setminus\{0\}\to \D\setminus\{0\}$，由于 $f|_U:U\to U$ 是一个共形自同构，于是 $g$ 也是. 由于 $g$ 在 $0$ 附近有界，从而 $0$ 是 $g$ 的可去奇点，所以我们可以解析地把 $g$ 延拓为 $\D\to \overline{D}$ 的映射，仍然记为 $g$. 因为 $g$ 连续，所以 $g$ 将单连通的 $\D$ 映为单连通集 $g(\D)\supset \D\setminus\{0\}$，因此必有 $\D\subset g(\D)$，从而必有 $g(0)=0$. 在延拓之前，已经知道 $f$ 与无理旋转解析共轭，因此 $g$（延拓前、后都）必为无理旋转. 考虑 $\psi^{-1}:\D\setminus\{0\}\to U$，$U$ 不一定有界，因此不能直接延拓. 取 $a,b,c\in J(f)$ 互异，则 $U\subset \hat{\C}\setminus\{a,b,c\}=:S'$，于是使用教材问题~2-m，则可以将 $\psi^{-1}$ 延拓为 $\eta:\D\to\hat{\C}$，这时设 $z_0=\eta(0)$，则 $z_0\in \overline{U}$，我们证明 $z_0\in \partial U$：反证法，$z_0\in U$ 说明 $\eta^{-1}(z_0)=\{0,w\}$ 有两个点，则考虑 $z_0$ 的小邻域 $V$ 的原像 $\eta^{-1}(V)$ 会有两个连通分支 $0\in V_1,w\in V_2$，于是 $V_1\setminus \{0\},V_2\setminus w\subset \D\setminus\{0\}$ 且有共同的像，与 $\psi^{-1}$ 单值性矛盾，从而 $z_0\in \partial U$（这里说明了 $\eta$ 是单射，从而是共形映射）.
+
+        在 $w\in \D\setminus\{0\}$ 上，都有 $\psi^{-1}(g(w))=f(\psi^{-1}(w))$，两边令 $w\to 0$，则 $z_0=f(z_0)$，于是 $z_0$ 是 $f$ 的不动点，通过共轭公式容易计算 $f'(z_0)=g'(0)=e^{2\pi i\rho}$，其中 $\tilde{\rho}$ 是无理旋转 $g$ 对应的无理数（事实上 $\tilde{\rho}=\rho$，但我们没有证）. 由于 $0$ 是 $\D$ 的内点，对于 $\eta$ 使用开映射定理，则 $z_0$ 是 $U$ 的内点，从而 $z_0$ 通过 $\eta^{-1}$ 实现了局部的线性化，从而必是 Siegel 不动点，由教材引理~11.1 知 $z_0\in F(f)$，但是 $z_0\in \partial U\subset J(f)$（见教材推论~4.12），矛盾. 这样，我们排除了 $U$ 共形等价于去心圆盘的可能，从而完成了证明.
+    \end{proof}
+    \begin{note}
+        在第 11 章中，我们不加证明地罗列了 Siegel 圆盘与 Diophantine 数的关系（教材定理~11.4），这与 Herman 环的构造是完全对应的.
+    \end{note}
+    Shishikura 证明了有理函数要出现 Herman 环，则其度数至少是 $3$. 另外，我们可以排除掉多项式出现 Herman 环的可能：
+    \begin{proposition}[多项式无 Herman 环 (15-a)]
+        多项式 $f$ 对应的 Fatou 集的所有分支都不是 Herman 环.
+    \end{proposition}
+    \begin{proof}
+        反证法，设 $U$ 是 $f$ 的一个 Herman 环，$\phi:U\to A_R=\{w\in \C|1<\abs{w}<R\}$ 是共形同构. 首先 $\deg(f)\in\{0,1\}$ 的情况是平凡的，下设 $\deg(f)\geq 2$. 于是 $\infty$ 是 $f$ 的超吸引不动点，则 $\infty$ 以及其吸引域 $A(\infty)$ 满足 $\infty\in A(\infty)\subset F(f)$. 特别的，由于 $U$ 上 $f$ 的表现是无理旋转而不是吸引，于是我们知道 $U\cap A(\infty)=\emptyset$，从而 $U$ 有界，于是由教材引理~9.4 知 $U$ 是单连通的，但 $U$ 与环域又共形等价了，因此矛盾.
+    \end{proof}
+
+    Shishikura 对 Herman 环的构造，是将两个 Siegel 圆盘去掉中间的小圆再沿小圆粘到一起，最后微调一下. 这样的构造也可以反过来. 使用这样的方法，可以证明：
+    \begin{proposition}[旋转数的关系]
+        构成 Herman 环的旋转数集就是构成 Siegel 圆盘的旋转数集.
+    \end{proposition}
+
+    Herman 环与 Siegel 圆盘还具有以下极其相似的性质：
+    \begin{lemma}[Herman 环与临界点 (15.7)]
+        若 $U$ 是 Herman 环，则 $\partial U\subset \overline{P}(f)$；$\partial U$ 有两个连通支，每个都是无穷集合.
+    \end{lemma}
+    \begin{proof}
+        第一个命题的证明与教材定理~11.17 关于 Siegel 圆盘边界的证明几乎一模一样.
+
+        对于第二个命题，首先由于 $U$ 与环面共形等价，则 $U$ 与去心圆盘同胚. 使用 Alexander 对偶研究同调与上同调，可以严格证明 $U$ 在球面上的余集 $\hat{\C}\setminus U$ 恰好由两个互不相交的闭连通分支 $K_1,K_2$ 组成. 于是 $\partial K_1,\partial K_2$ 也互不相交. 我们知道 $\partial U=\partial K_1\cup \partial K_2$，于是只需 $\partial K_1,\partial K_2$ 分别是连通的则证完第一部分. 在平面拓扑中，若 $K\subset \hat{\C}$ 是紧连通的且补集连通，则 $\partial K$ 连通. 首先 $K_1$ 作为紧集的闭连通子集，自然是紧连通的；$\hat{\C}\setminus K_1=U\cup K_2$ 由于 $\overline{U}\cap \overline{K_2}\neq\emptyset$，于是由点集拓扑知是连通的. 因此 $\partial K_1$ 连通；同理 $\partial K_2$ 连通. 要证第二部分（它们是无限集），则反证法，设 $K_1$ 是有限集，由于连通则必须是单点集 $z_0$. 设 $\psi:U\to A_R=\{w\in \C|1<\abs{w}<R\}$ 是共形同构，则 $z_0$ 是 $\psi$ 的可去奇点，于是 $\psi$ 可以延拓到 $U\cup \{z_0\}$ 上. 注意到这时 $U\cup \{z_0\}$ 与 $\hat{\C}\setminus(U\cup \{z_0\})=K_2$ 都是连通集，且后者是紧连通集，因此二者都是单连通集，从而像 $\psi(U\cup \{z_0\})$ 是单连通集. 但是 $\psi(U\cup \{z_0\})$ 满足 $A_R\subset \psi(U\cup \{z_0\})\subset \overline{A}_R$，于是 $\psi(U\cup \{z_0\})$ 不是单连通集，矛盾. 于是 $K_1$ 是无限集. 同理 $K_2$ 是无限集.
+    \end{proof}
+
+    \begin{thebibliography}{}
+        \bibitem{KH95}
+        Katok A, Hasselblatt B. \emph{Introduction to the Modern Theory of Dynamical Systems}. Cambridge University Press; 1995.
+    \end{thebibliography}
+
+\end{document}
